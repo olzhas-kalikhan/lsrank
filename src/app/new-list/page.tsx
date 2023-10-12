@@ -5,7 +5,6 @@ const Form = () => {
   return (
     <div className="p-4">
       <NewListForm />
-      <Lists />
     </div>
   );
 };

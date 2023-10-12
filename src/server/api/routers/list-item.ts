@@ -36,4 +36,7 @@ export const listItemRouter = createTRPCRouter({
         },
       });
     }),
+  get: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.listItem.findMany();
+  }),
 });

@@ -5,11 +5,11 @@ import { type inferProcedureOutput } from "@trpc/server";
 import Link from "next/link";
 import { type AppRouter } from "~/server/api/root";
 import { Button } from "~/components/ui/button";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-type ListRow = inferProcedureOutput<AppRouter["list"]["get"]>[number];
+export type ListRow = inferProcedureOutput<AppRouter["list"]["get"]>[number];
 export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "name",

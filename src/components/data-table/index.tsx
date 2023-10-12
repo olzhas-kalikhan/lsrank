@@ -1,14 +1,16 @@
 "use client";
 
 import {
-  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-  SortingState,
+  type SortingState,
   getSortedRowModel,
+  type Row,
+  type TableOptions,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { type MarkOptional } from "ts-essentials";
 
 import {
   Table,
@@ -19,15 +21,19 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<TData>
+  extends MarkOptional<TableOptions<TData>, "getCoreRowModel"> {
+  getRowProps?: (
+    row: Row<TData>,
+    i: number,
+  ) => React.HTMLAttributes<HTMLTableRowElement>;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  getRowProps,
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -64,10 +70,11 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, i) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                {...getRowProps?.(row, i)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

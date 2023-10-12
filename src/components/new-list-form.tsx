@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -20,20 +20,33 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { createList } from "~/server/actions";
+import ListItemForm, { type ListItem } from "./list-item-form";
+import { trpcReact } from "~/utils/trpc";
+import { revalidatePath } from "next/cache";
 
 const defaultValues = {
   name: "",
-  type: "VIDEO_GAME",
+  type: "VIDEO_GAME" as const,
+  listItems: [] as ListItem[],
 };
 const NewListForm = () => {
   const formMethods = useForm({ defaultValues });
+  const arrayMethods = useFieldArray({
+    control: formMethods.control,
+    name: "listItems",
+  });
+  const { mutate } = trpcReact.list.create.useMutation();
+
   return (
     <Form {...formMethods}>
       <form
         className="py-4"
-        action={(formData) => {
-          console.log(formData);
-          void createList(formData);
+        onSubmit={(e) => {
+          e.preventDefault();
+          void formMethods.handleSubmit((values) => {
+            console.log(values);
+            return mutate(values);
+          })(e);
         }}
       >
         <h1 className="mb-2 text-2xl font-semibold">New List</h1>
@@ -76,6 +89,7 @@ const NewListForm = () => {
             </FormItem>
           )}
         />
+        <ListItemForm {...arrayMethods} />
         <Button type="submit">Submit</Button>
       </form>
     </Form>

@@ -1,12 +1,10 @@
-import Link from "next/link";
 import { trpcServer } from "~/server/api/root";
-import { DataTable } from "../data-table";
-import { columns } from "./columns";
+import ListsDataTable from "./data-table";
 
 const Lists = async () => {
   const lists = await (await trpcServer()).list.get();
 
-  return <DataTable columns={columns} data={lists} />;
+  return <ListsDataTable lists={lists} />;
 };
 
 export default Lists;
