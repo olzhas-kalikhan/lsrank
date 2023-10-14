@@ -5,7 +5,9 @@ import { type inferProcedureOutput } from "@trpc/server";
 import Link from "next/link";
 import { type AppRouter } from "~/server/api/root";
 import { Button } from "~/components/ui/button";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { HeaderCell } from "~/components/data-table";
+import { XCircle } from "lucide-react";
+import { trpcReact } from "~/utils/trpc";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -13,26 +15,7 @@ export type ListRow = inferProcedureOutput<AppRouter["list"]["get"]>[number];
 export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-      return (
-        <Button
-          variant="link"
-          className="px-0"
-          onClick={() => {
-            if (isSorted === "desc") column.clearSorting();
-            else column.toggleSorting(isSorted === "asc");
-          }}
-        >
-          Name
-          {isSorted === false && (
-            <ArrowDown className="invisible ml-2 h-4 w-4" />
-          )}
-          {isSorted === "desc" && <ArrowDown className="ml-2 h-4 w-4" />}
-          {isSorted === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
-        </Button>
-      );
-    },
+    header: ({ column }) => <HeaderCell {...{ column, label: "Name" }} />,
     cell: ({ getValue }) => {
       const value = getValue() as string;
       return (
@@ -48,30 +31,41 @@ export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "type",
 
-    header: ({ column }) => {
-      const isSorted = column.getIsSorted();
-      return (
-        <Button
-          className="px-0"
-          variant="link"
-          onClick={() => {
-            if (isSorted === "desc") column.clearSorting();
-            else column.toggleSorting(isSorted === "asc");
-          }}
-        >
-          Type
-          {isSorted === false && (
-            <ArrowDown className="invisible ml-2 h-4 w-4" />
-          )}
-          {isSorted === "desc" && <ArrowDown className="ml-2 h-4 w-4" />}
-          {isSorted === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
-        </Button>
-      );
-    },
+    header: ({ column }) => <HeaderCell {...{ column, label: "Type" }} />,
   },
   {
     accessorKey: "_count",
-    header: "List Items",
+    header: ({ column }) => <HeaderCell {...{ column, label: "List Items" }} />,
     cell: ({ getValue }) => getValue<ListRow["_count"]>().ListItem,
   },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row: { original } }) => <DeleteListButton listId={original.id} />,
+
+    size: 20,
+    minSize: 20,
+  },
 ];
+
+const DeleteListButton = ({ listId }: { listId: string }) => {
+  const utils = trpcReact.useContext();
+  const { mutate } = trpcReact.list.delete.useMutation({
+    onSuccess: () => {
+      void utils.list.get.invalidate();
+    },
+  });
+  return (
+    <Button
+      variant="secondary"
+      tabIndex={-1}
+      className="rounded-full px-2"
+      onClick={(e) => {
+        e.stopPropagation();
+        mutate({ listId });
+      }}
+    >
+      <XCircle />
+    </Button>
+  );
+};

@@ -4,7 +4,7 @@ import ListsDataTable from "./data-table";
 const Lists = async () => {
   const lists = await (await trpcServer()).list.get();
 
-  return <ListsDataTable lists={lists} />;
+  return <ListsDataTable initialLists={lists} />;
 };
 
 export default Lists;

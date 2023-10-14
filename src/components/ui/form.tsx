@@ -8,14 +8,11 @@ import {
   type ControllerProps,
   type FieldPath,
   type FieldValues,
-  FormProvider,
   useFormContext,
 } from "react-hook-form";
 
 import { cn } from "src/utils/ui";
 import { Label } from "src/components/ui/label";
-
-const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -71,19 +68,18 @@ type FormItemContextValue = {
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 );
+export type FormItemProps = React.HTMLAttributes<HTMLDivElement>;
+const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
+  ({ className, ...props }, ref) => {
+    const id = React.useId();
 
-const FormItem = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const id = React.useId();
-
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
-    </FormItemContext.Provider>
-  );
-});
+    return (
+      <FormItemContext.Provider value={{ id }}>
+        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      </FormItemContext.Provider>
+    );
+  },
+);
 FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
@@ -169,7 +165,6 @@ FormMessage.displayName = "FormMessage";
 
 export {
   useFormField,
-  Form,
   FormItem,
   FormLabel,
   FormControl,

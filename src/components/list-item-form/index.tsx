@@ -1,20 +1,11 @@
 import { type inferProcedureOutput } from "@trpc/server";
-import {
-  type Control,
-  useFieldArray,
-  FieldValues,
-  UseFieldArrayReturn,
-} from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import { type UseFieldArrayReturn } from "react-hook-form";
 import { type AppRouter } from "~/server/api/root";
-import { cn } from "~/utils/ui";
-import { Button } from "../ui/button";
+import { Button } from "~/components/ui/button";
+import { PlusCircle, XCircle } from "lucide-react";
+import { FormInput, FormNumberInput } from "~/components/form";
+import { Label } from "~/components/ui/label";
+import React from "react";
 
 type ListItemOutput = inferProcedureOutput<
   AppRouter["listItem"]["get"]
@@ -24,70 +15,72 @@ export type ListItem = Pick<ListItemOutput, "name" | "score" | "tags">;
 
 const ListItemForm = ({
   fields,
-  append,
+  prepend,
+  remove,
 }: UseFieldArrayReturn<
   { name: string; type: "VIDEO_GAME"; listItems: ListItem[] },
   "listItems"
 >) => {
+  const addButton = (
+    <Button
+      type="button"
+      className="mt-3"
+      onClick={() => {
+        prepend({ name: "", tags: "", score: 0 });
+      }}
+    >
+      <PlusCircle className="pr-1" />
+      Add to the list
+    </Button>
+  );
+
+  const getRemoveButton = (index: number) => (
+    <Button
+      type="button"
+      variant="secondary"
+      onClick={() => {
+        remove(index);
+      }}
+    >
+      <XCircle className="col-span-1 pr-1" />
+      Remove
+    </Button>
+  );
+
   return (
     <>
-      {fields.map((field, index) => (
-        <div key={field.id}>
-          <FormField
-            name={`listItems.${index}.name`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={cn(index !== 0 && "sr-only")}>
-                  Item
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name={`listItems.${index}.score`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={cn(index !== 0 && "sr-only")}>
-                  Score
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="number"
-                    onChange={(e) => {
-                      field.onChange(parseFloat(e.target.value));
-                    }}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name={`listItems.${index}.tags`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className={cn(index !== 0 && "sr-only")}>
-                  Tags
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-      ))}
-      <Button
-        type="button"
-        onClick={() => {
-          append({ name: "", tags: "", score: 0 });
-        }}
-      >
-        Add Item
-      </Button>
+      {addButton}
+
+      <div className="my-3 grid grid-cols-7 gap-x-2 gap-y-3 max-w-screen-lg">
+        <Label className="col-span-2">Name</Label>
+        <Label className="col-span-2">Type</Label>
+        <Label className="col-span-2">Tags</Label>
+        <div className="col-span-1" />
+        {fields.map((field, index) => (
+          <React.Fragment key={field.id}>
+            <FormInput
+              name={`listItems.${index}.name`}
+              componentsProps={{ formItem: { className: "col-span-2" } }}
+            />
+            <FormNumberInput
+              name={`listItems.${index}.score`}
+              componentsProps={{
+                formItem: { className: "col-span-2" },
+                input: {
+                  decimalScale: 0,
+                  isAllowed: ({ floatValue = 0 }) =>
+                    floatValue >= 0 && floatValue <= 100,
+                },
+              }}
+            />
+            <FormInput
+              name={`listItems.${index}.tags`}
+              componentsProps={{ formItem: { className: "col-span-2" } }}
+            />
+            {getRemoveButton(index)}
+          </React.Fragment>
+        ))}
+      </div>
     </>
   );
 };

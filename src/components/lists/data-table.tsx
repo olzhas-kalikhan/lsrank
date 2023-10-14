@@ -3,9 +3,13 @@
 import { useRouter } from "next/navigation";
 import { DataTable } from "../data-table";
 import { columns, type ListRow } from "./columns";
+import { trpcReact } from "../../utils/trpc";
 
-const ListsDataTable = ({ lists }: { lists: ListRow[] }) => {
+const ListsDataTable = ({ initialLists }: { initialLists: ListRow[] }) => {
   const router = useRouter();
+  const { data: lists } = trpcReact.list.get.useQuery(undefined, {
+    initialData: initialLists,
+  });
 
   return (
     <DataTable

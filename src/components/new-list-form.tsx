@@ -1,34 +1,17 @@
 "use client";
 
-import { useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { createList } from "~/server/actions";
-import ListItemForm, { type ListItem } from "./list-item-form";
 import { trpcReact } from "~/utils/trpc";
-import { revalidatePath } from "next/cache";
+import { FormInput, FormSelect } from "./form";
+import ListItemForm, { type ListItem } from "./list-item-form";
 
 const defaultValues = {
   name: "",
   type: "VIDEO_GAME" as const,
-  listItems: [] as ListItem[],
+  listItems: [{ name: "", score: 0, tags: "" }] as ListItem[],
 };
+
 const NewListForm = () => {
   const formMethods = useForm({ defaultValues });
   const arrayMethods = useFieldArray({
@@ -38,61 +21,28 @@ const NewListForm = () => {
   const { mutate } = trpcReact.list.create.useMutation();
 
   return (
-    <Form {...formMethods}>
+    <FormProvider {...formMethods}>
       <form
         className="py-4"
         onSubmit={(e) => {
           e.preventDefault();
           void formMethods.handleSubmit((values) => {
-            console.log(values);
+            formMethods.reset();
             return mutate(values);
           })(e);
         }}
       >
         <h1 className="mb-2 text-2xl font-semibold">New List</h1>
-        <FormField
+        <FormInput
           control={formMethods.control}
           name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>List Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="List Name"
         />
-        <FormField
-          control={formMethods.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Select
-                  name={field.name}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="VIDEO_GAME">Video Games</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormSelect control={formMethods.control} name="type" label="Type" />
         <ListItemForm {...arrayMethods} />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Save</Button>
       </form>
-    </Form>
+    </FormProvider>
   );
 };
 export default NewListForm;

@@ -12,29 +12,43 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { cn } from "~/utils/ui";
 
-const styleTrigger = navigationMenuTriggerStyle({
-  className: "text-xl mb-4 uppercase",
-});
 const Navigation = ({ className }: { className: string }) => {
   const session = useSession();
   const router = useRouter();
 
   return (
-    <NavigationMenu className={cn(className, "list-none flex-col items-start")}>
-      <NavigationMenuItem>
-        <NavigationMenuLink className={styleTrigger} href="/">
+    <NavigationMenu
+      className={cn(className, "list-none flex-col items-start pl-0")}
+    >
+      <NavigationMenuItem className="w-full">
+        <NavigationMenuLink
+          className={cn(
+            navigationMenuTriggerStyle(),
+            "mb-4 w-full justify-start rounded-none text-xl uppercase pl-[35%]",
+          )}
+          href="/"
+        >
           home
         </NavigationMenuLink>
       </NavigationMenuItem>
-      <NavigationMenuItem>
-        <NavigationMenuLink className={styleTrigger} href="/lists">
+      <NavigationMenuItem className="w-full">
+        <NavigationMenuLink
+          className={cn(
+            navigationMenuTriggerStyle(),
+            "mb-4 w-full justify-start rounded-none text-xl uppercase pl-[35%]",
+          )}
+          href="/lists"
+        >
           lists
         </NavigationMenuLink>
       </NavigationMenuItem>
       {session.status === "unauthenticated" && (
-        <NavigationMenuItem>
+        <NavigationMenuItem className="w-full">
           <NavigationMenuLink
-            className={styleTrigger}
+            className={cn(
+              navigationMenuTriggerStyle(),
+              "mb-4 w-full justify-start rounded-none text-xl uppercase pl-[35%]",
+            )}
             onClick={() => {
               void router.push("/sign-in");
             }}
@@ -45,14 +59,23 @@ const Navigation = ({ className }: { className: string }) => {
       )}
       {session.status === "authenticated" && (
         <>
-          <NavigationMenuItem>
-            <NavigationMenuLink href="/new-list" className={styleTrigger}>
+          <NavigationMenuItem className="w-full">
+            <NavigationMenuLink
+              href="/new-list"
+              className={cn(
+                navigationMenuTriggerStyle(),
+                "mb-4 w-full justify-start rounded-none text-xl uppercase pl-[35%]",
+              )}
+            >
               new list
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          <NavigationMenuItem className="w-full">
             <NavigationMenuLink
-              className={styleTrigger}
+              className={cn(
+                navigationMenuTriggerStyle(),
+                "mb-4 w-full justify-start rounded-none text-xl uppercase pl-[35%]",
+              )}
               onClick={() => {
                 void signOut();
               }}

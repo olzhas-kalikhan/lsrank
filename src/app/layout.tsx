@@ -31,9 +31,9 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="grid h-full grid-cols-12">
-                <Navigation className="col-span-3 pl-10" />
-                <main className="col-span-9">{children}</main>
+              <div className="grid h-full grid-cols-7">
+                <Navigation className="col-span-1 pl-10" />
+                <main className="col-span-5">{children}</main>
               </div>
             </ThemeProvider>
           </SessionProvider>
