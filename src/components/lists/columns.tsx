@@ -11,7 +11,7 @@ import { trpcReact } from "~/utils/trpc";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type ListRow = inferProcedureOutput<AppRouter["list"]["get"]>[number];
+export type ListRow = inferProcedureOutput<AppRouter["list"]["getMany"]>[number];
 export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "name",

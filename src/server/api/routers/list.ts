@@ -1,4 +1,5 @@
 import { ListType } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -42,7 +43,28 @@ export const listRouter = createTRPCRouter({
         },
       });
     }),
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: protectedProcedure
+    .input(
+      z
+        .object({
+          id: z.string().cuid(),
+          name: z.string(),
+        })
+        .partial(),
+    )
+    .query(async ({ ctx, input }) => {
+      const { name, id } = input;
+      if (!name && !id)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "ID or Name is required",
+        });
+      return ctx.db.list.findMany({
+        where: id ? { id } : { name },
+        include: { ListItem: true },
+      });
+    }),
+  getMany: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.list.findMany({
       include: {
         _count: {

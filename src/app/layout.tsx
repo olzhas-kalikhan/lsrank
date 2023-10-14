@@ -4,8 +4,8 @@ import SessionProvider from "~/components/providers/session-provider";
 import { ThemeProvider } from "~/components/providers/theme-provider";
 import Navigation from "~/components/navigation";
 import { getServerAuthSession } from "~/server/auth";
-import ErrorBoundary from "~/components/error-boundary";
 import { TrpcProvider } from "~/components/providers/trpc-provider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,6 +31,7 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <Toaster richColors/>
               <div className="grid h-full grid-cols-7">
                 <Navigation className="col-span-1 pl-10" />
                 <main className="col-span-5">{children}</main>

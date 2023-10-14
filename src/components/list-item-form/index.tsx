@@ -6,6 +6,7 @@ import { PlusCircle, XCircle } from "lucide-react";
 import { FormInput, FormNumberInput } from "~/components/form";
 import { Label } from "~/components/ui/label";
 import React from "react";
+import { type ListType } from "@prisma/client";
 
 type ListItemOutput = inferProcedureOutput<
   AppRouter["listItem"]["get"]
@@ -18,7 +19,7 @@ const ListItemForm = ({
   prepend,
   remove,
 }: UseFieldArrayReturn<
-  { name: string; type: "VIDEO_GAME"; listItems: ListItem[] },
+  { name: string; type: ListType; listItems: ListItem[] },
   "listItems"
 >) => {
   const addButton = (
@@ -51,7 +52,7 @@ const ListItemForm = ({
     <>
       {addButton}
 
-      <div className="my-3 grid grid-cols-7 gap-x-2 gap-y-3 max-w-screen-lg">
+      <div className="my-3 grid max-w-screen-lg grid-cols-7 gap-x-2 gap-y-3">
         <Label className="col-span-2">Name</Label>
         <Label className="col-span-2">Type</Label>
         <Label className="col-span-2">Tags</Label>

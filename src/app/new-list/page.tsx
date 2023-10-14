@@ -1,10 +1,10 @@
 import Lists from "~/components/lists";
-import NewListForm from "~/components/new-list-form";
+import ListForm from "~/components/list-form";
 
 const Form = () => {
   return (
     <div className="p-4">
-      <NewListForm />
+      <ListForm />
     </div>
   );
 };

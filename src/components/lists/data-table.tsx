@@ -7,7 +7,7 @@ import { trpcReact } from "../../utils/trpc";
 
 const ListsDataTable = ({ initialLists }: { initialLists: ListRow[] }) => {
   const router = useRouter();
-  const { data: lists } = trpcReact.list.get.useQuery(undefined, {
+  const { data: lists } = trpcReact.list.getMany.useQuery(undefined, {
     initialData: initialLists,
   });
 
