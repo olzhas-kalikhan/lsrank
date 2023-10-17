@@ -4,7 +4,7 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { trpcReact } from "~/utils/trpc";
 import { FormInput, FormSelect } from "./form";
-import ListItemForm, { type ListItem } from "./list-item-form";
+import ListItemForm, { type ListItem } from "./list-items-form";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { type inferProcedureOutput } from "@trpc/server";

@@ -32,6 +32,12 @@ export const listRouter = createTRPCRouter({
       z.object({
         listId: z.string().cuid(),
         name: z.string(),
+        listItems: z
+          .object({
+            name: z.string(),
+            score: z.number(),
+          })
+          .array(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -40,6 +46,10 @@ export const listRouter = createTRPCRouter({
         data: {
           name: input.name,
           userId: ctx.session.user.id,
+          ListItem: {
+            deleteMany: {},
+            createMany: { data: input.listItems },
+          },
         },
       });
     }),
