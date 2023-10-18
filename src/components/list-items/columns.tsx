@@ -3,11 +3,11 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { type inferProcedureOutput } from "@trpc/server";
 import { type AppRouter } from "~/server/api/root";
-import { HeaderCell, useTableContext } from "~/components/data-table";
+import { useTableContext } from "~/components/data-table";
 import { Button } from "../ui/button";
 import { Pencil, XCircle } from "lucide-react";
 import { Input } from "../ui/input";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 type ListItemOutput = inferProcedureOutput<
   AppRouter["listItem"]["get"]
@@ -17,7 +17,7 @@ export type ListItem = Pick<ListItemOutput, "name" | "score" | "tags">;
 export const columns: ColumnDef<ListItem>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => <HeaderCell column={column} label="Name" />,
+    header: "Name",
     cell: ({ getValue, row }) => {
       const value = getValue<ListItem["name"]>();
       return <EditableCell id={row.id} value={value} />;
@@ -25,17 +25,17 @@ export const columns: ColumnDef<ListItem>[] = [
   },
   {
     accessorKey: "score",
-    header: ({ column }) => <HeaderCell column={column} label="Score" />,
+    header: "Score",
   },
   {
     accessorKey: "tags",
-    header: ({ column }) => <HeaderCell column={column} label="Tags" />,
+    header: "Tags",
   },
   {
     id: "actions",
     enableHiding: false,
     size: 20,
-    cell: ({ row }) => <EditButtonCell id={row.id} row={row.original} />,
+    cell: ({ row }) => <EditButtonCell id={row.id} />,
   },
 ];
 
@@ -90,7 +90,7 @@ const InputCell = ({
   );
 };
 
-const EditButtonCell = <TData,>({ id, row }: { id: string; row: TData }) => {
+const EditButtonCell = ({ id }: { id: string }) => {
   const { editModesModel, editRowsModel, setEditModesModel, setEditRowsModel } =
     useTableContext<ListItem>();
   const isEdit = editModesModel[id];

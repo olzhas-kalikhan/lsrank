@@ -4,7 +4,7 @@ import { trpcReact } from "~/utils/trpc";
 import { DataTable } from "~/components/data-table";
 import { columns } from "./columns";
 import { type inferProcedureOutput } from "@trpc/server";
-import { AppRouter } from "~/server/api/root";
+import { type AppRouter } from "~/server/api/root";
 
 type ListItem = inferProcedureOutput<AppRouter["list"]["get"]>;
 
