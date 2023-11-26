@@ -69,7 +69,7 @@ export const listRouter = createTRPCRouter({
           code: "BAD_REQUEST",
           message: "ID or Name is required",
         });
-      return ctx.db.list.findMany({
+      return ctx.db.list.findFirst({
         where: id ? { id } : { name },
         include: { ListItem: true },
       });

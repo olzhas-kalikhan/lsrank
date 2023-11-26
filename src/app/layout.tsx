@@ -6,6 +6,7 @@ import Navigation from "~/components/navigation";
 import { getServerAuthSession } from "~/server/auth";
 import { TrpcProvider } from "~/components/providers/trpc-provider";
 import { Toaster } from "sonner";
+import AppBar from "~/components/app-bar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,10 +32,13 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Toaster richColors/>
-              <div className="grid h-full grid-cols-7">
-                <Navigation className="col-span-1 pl-10" />
-                <main className="col-span-5">{children}</main>
+              <Toaster richColors />
+
+              <AppBar className="w-full"></AppBar>
+              <div className="flex h-full pt-8">
+                <Navigation className="w-1/6" />
+                <main className="w-4/6">{children}</main>
+                <div className=" w-1/6"></div>
               </div>
             </ThemeProvider>
           </SessionProvider>

@@ -5,22 +5,23 @@ import { type inferProcedureOutput } from "@trpc/server";
 import Link from "next/link";
 import { type AppRouter } from "~/server/api/root";
 import { Button } from "~/components/ui/button";
-import { HeaderCell } from "~/components/data-table";
-import { XCircle } from "lucide-react";
+import { Trash, XCircle } from "lucide-react";
 import { trpcReact } from "~/utils/trpc";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type ListRow = inferProcedureOutput<AppRouter["list"]["getMany"]>[number];
+export type ListRow = inferProcedureOutput<
+  AppRouter["list"]["getMany"]
+>[number];
 export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => <HeaderCell {...{ column, label: "Name" }} />,
-    cell: ({ getValue }) => {
+    header: "Name",
+    cell: ({ getValue, row: { id } }) => {
       const value = getValue() as string;
       return (
         <Link
-          href={`/${value}`}
+          href={`/${id}`}
           className="font-medium transition-colors hover:text-primary hover:underline"
         >
           {value}
@@ -30,18 +31,19 @@ export const columns: ColumnDef<ListRow>[] = [
   },
   {
     accessorKey: "type",
-
-    header: ({ column }) => <HeaderCell {...{ column, label: "Type" }} />,
+    header: "Type",
   },
   {
     accessorKey: "_count",
-    header: ({ column }) => <HeaderCell {...{ column, label: "List Items" }} />,
+    header: "List Items",
     cell: ({ getValue }) => getValue<ListRow["_count"]>().ListItem,
   },
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row: { original } }) => <DeleteListButton listId={original.id} />,
+    cell: ({ row: { original }, table }) => (
+      <DeleteListButton listId={original.id} />
+    ),
 
     size: 20,
     minSize: 20,
@@ -65,7 +67,7 @@ const DeleteListButton = ({ listId }: { listId: string }) => {
         mutate({ listId });
       }}
     >
-      <XCircle />
+      <Trash />
     </Button>
   );
 };
