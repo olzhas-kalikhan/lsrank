@@ -1,6 +1,17 @@
-import { flexRender, type Header } from "@tanstack/react-table";
+import { type SortDirection, flexRender, type Header } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "~/components/ui/button";
+
+const getIcon = (isSorted: false | SortDirection) => {
+  switch (isSorted) {
+    case "asc":
+      return <ArrowUp className="ml-2 h-4 w-4" />;
+    case "desc":
+      return <ArrowDown className="ml-2 h-4 w-4" />;
+    default:
+      return <ArrowDown className="invisible ml-2 h-4 w-4" />;
+  }
+};
 
 export const HeaderCell = <TData, TValue>({
   column,
@@ -18,9 +29,7 @@ export const HeaderCell = <TData, TValue>({
       }}
     >
       {flexRender(column.columnDef.header, getContext())}
-      {isSorted === false && <ArrowDown className="invisible ml-2 h-4 w-4" />}
-      {isSorted === "desc" && <ArrowDown className="ml-2 h-4 w-4" />}
-      {isSorted === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
+      {getIcon(isSorted)}
     </Button>
   );
 };

@@ -1,4 +1,3 @@
-import Lists from "~/components/lists";
 import ListForm from "~/components/list-form";
 
 const Form = () => {

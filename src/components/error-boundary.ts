@@ -1,7 +1,5 @@
 "use client";
 
-import { TRPCError } from "@trpc/server";
-import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -22,7 +20,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   static getDerivedStateFromError(error: Error): State {
     // Update state so the next render will show the fallback UI.
-    console.log({ error });
+    console.error({ error });
     return { hasError: true };
   }
 
@@ -33,7 +31,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     //   in div (created by App)
     //   in App
     // logErrorToMyService(error, info.componentStack);
-    console.log({ error, info, m: error.message });
+    console.error({ error, info, m: error.message });
     if (error.message === "UNAUTHORIZED") redirect("/sign-in");
   }
 

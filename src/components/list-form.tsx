@@ -11,7 +11,7 @@ import { type inferProcedureOutput } from "@trpc/server";
 import { type AppRouter } from "~/server/api/root";
 import { type ListType } from "@prisma/client";
 
-type List = inferProcedureOutput<AppRouter["list"]["get"]>[number];
+type List = inferProcedureOutput<AppRouter["list"]["get"]>;
 
 const defaultValues = {
   name: "",
@@ -28,7 +28,7 @@ const ListForm = ({ list }: { list?: List }) => {
           listItems: list.ListItem.map(({ name, score, tags }) => ({
             name,
             score,
-            tags: tags ?? "",
+            tags,
           })),
         }
       : defaultValues,

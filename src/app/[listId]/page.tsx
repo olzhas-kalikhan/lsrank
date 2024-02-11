@@ -9,9 +9,10 @@ export default async function ListView({
 }) {
   const trpc = await trpcServer();
   const list = await trpc.list.get({ id: listId });
+
   return (
     <div>
-      <h1 className="text-3xl mb-3">{list?.name}</h1>
+      <h1 className="mb-3 text-3xl">{list?.name}</h1>
       <NewListItem listId={listId} />
       <ListItemsDataTable listId={listId} initialLists={list} />
     </div>

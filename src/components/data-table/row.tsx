@@ -1,51 +1,26 @@
-import { type Row as RowType } from "@tanstack/react-table";
-import { type DefaultValues, FormProvider, useForm } from "react-hook-form";
+import { type RowProps } from "@tanstack/react-table";
 import { TableRow } from "~/components/ui/table";
 import { useTableContext } from "./utils";
 
-export type GetRowPropsFn<TData> = (
-  row: RowType<TData>,
-  i: number,
-) => React.HTMLAttributes<HTMLTableRowElement>;
-
-export const Row = <TData,>(
-  props: RowType<TData> & {
-    children: React.ReactNode;
-    getRowProps?: GetRowPropsFn<TData>;
-  },
-) => {
+export const Row = <TData,>(props: RowProps<TData>) => {
   const { children, getRowProps, ...row } = props;
   const { options } = useTableContext<TData>();
-  const isEditMode = options.meta?.editModesModel[row.id];
-  const editable = options.meta?.editable;
-  const editRow =
-    editable && isEditMode ? (
-      <EditRowWrapper initialValue={row.original}>{children}</EditRowWrapper>
-    ) : (
-      children
-    );
+  const isEditMode = options.meta?.editModesModel?.[row.id];
+  const Component = options.meta?.components?.Row;
+  const rowContent = Component ? <Component {...props} /> : children;
 
   return (
     <TableRow
       key={row.id}
       data-state={row.getIsSelected() && "selected"}
-      className={isEditMode ? "!border-b border-b-gray-500 hover:border-b-gray-400 hover:bg-transparent transition-none" : ""}
+      className={
+        isEditMode
+          ? "!border-b border-b-gray-500 transition-none hover:border-b-gray-400 hover:bg-transparent"
+          : ""
+      }
       {...getRowProps?.(row, row.index)}
     >
-      {editRow}
+      {rowContent}
     </TableRow>
   );
-};
-
-const EditRowWrapper = <TData,>({
-  children,
-  initialValue,
-}: {
-  initialValue: TData;
-  children: React.ReactNode;
-}) => {
-  const formMethods = useForm({
-    defaultValues: initialValue as DefaultValues<TData>,
-  });
-  return <FormProvider {...formMethods}>{children}</FormProvider>;
 };

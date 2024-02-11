@@ -4,7 +4,7 @@ import { cn } from "~/utils/ui";
 
 export const Cell = <TData, TValue>(cell: CellType<TData, TValue>) => {
   const meta = cell.getContext().table.options.meta;
-  const isEdit = meta?.editModesModel[cell.row.id];
+  const isEdit = meta?.editModesModel?.[cell.row.id];
   return (
     <TableCell
       className={cn(

@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { trpcReact } from "../../utils/trpc";
 import { toast } from "sonner";
 import { CircleDashed } from "lucide-react";
+import React from "react";
 
 const defaultListItem: ListItem = {
   name: "",
@@ -31,7 +32,7 @@ const NewListItem = ({ listId }: { listId: string }) => {
   return (
     <FormProvider {...formMethods}>
       <form
-        className="grid grid-cols-4 gap-3 mb-4"
+        className="mb-4 grid grid-cols-4 gap-3"
         onSubmit={(e) => {
           e.preventDefault();
           void formMethods.handleSubmit((values) => {

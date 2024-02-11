@@ -1,6 +1,7 @@
 import { listRouter } from "~/server/api/routers/list";
 import { createTRPCContext, createTRPCRouter } from "~/server/api/trpc";
 import { listItemRouter } from "./routers/list-item";
+import { gameRouter } from "./routers/game";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { listItemRouter } from "./routers/list-item";
 export const appRouter = createTRPCRouter({
   list: listRouter,
   listItem: listItemRouter,
+  game: gameRouter,
 });
 
 // export type definition of API

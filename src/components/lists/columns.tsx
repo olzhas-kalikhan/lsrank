@@ -2,11 +2,11 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import { type inferProcedureOutput } from "@trpc/server";
-import Link from "next/link";
 import { type AppRouter } from "~/server/api/root";
 import { Button } from "~/components/ui/button";
-import { Trash, XCircle } from "lucide-react";
+import { CircleDashed, Trash } from "lucide-react";
 import { trpcReact } from "~/utils/trpc";
+import { toast } from "sonner";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -17,17 +17,6 @@ export const columns: ColumnDef<ListRow>[] = [
   {
     accessorKey: "name",
     header: "Name",
-    cell: ({ getValue, row: { id } }) => {
-      const value = getValue() as string;
-      return (
-        <Link
-          href={`/${id}`}
-          className="font-medium transition-colors hover:text-primary hover:underline"
-        >
-          {value}
-        </Link>
-      );
-    },
   },
   {
     accessorKey: "type",
@@ -37,13 +26,14 @@ export const columns: ColumnDef<ListRow>[] = [
     accessorKey: "_count",
     header: "List Items",
     cell: ({ getValue }) => getValue<ListRow["_count"]>().ListItem,
+    sortingFn: (rowA, rowB, columnId) =>
+      rowA.getValue<ListRow["_count"]>(columnId).ListItem -
+      rowB.getValue<ListRow["_count"]>(columnId).ListItem,
   },
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row: { original }, table }) => (
-      <DeleteListButton listId={original.id} />
-    ),
+    cell: ({ row: { original } }) => <DeleteListButton listId={original.id} />,
 
     size: 20,
     minSize: 20,
@@ -52,11 +42,13 @@ export const columns: ColumnDef<ListRow>[] = [
 
 const DeleteListButton = ({ listId }: { listId: string }) => {
   const utils = trpcReact.useContext();
-  const { mutate } = trpcReact.list.delete.useMutation({
-    onSuccess: () => {
-      void utils.list.get.invalidate();
-    },
-  });
+  const { mutate: deleteList, isLoading: isDeleting } =
+    trpcReact.list.delete.useMutation({
+      onSuccess: async ({ name }) => {
+        await utils.list.getMany.invalidate();
+        toast.success(`List "${name}" was deleted`);
+      },
+    });
   return (
     <Button
       variant="secondary"
@@ -64,10 +56,10 @@ const DeleteListButton = ({ listId }: { listId: string }) => {
       className="rounded-full px-2"
       onClick={(e) => {
         e.stopPropagation();
-        mutate({ listId });
+        deleteList({ listId });
       }}
     >
-      <Trash />
+      {isDeleting ? <CircleDashed className="animate-spin" /> : <Trash />}
     </Button>
   );
 };

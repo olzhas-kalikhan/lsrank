@@ -8,6 +8,9 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
   experimental: { serverActions: true },
+  images: {
+    domains: ["images.igdb.com"],
+  },
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
    *

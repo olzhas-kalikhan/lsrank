@@ -8,12 +8,21 @@ import {
 import { type inferProcedureOutput } from "@trpc/server";
 import { type AppRouter } from "~/server/api/root";
 import { Button } from "~/components/ui/button";
-import { CircleDashed, Pencil, Save, Trash, XCircle } from "lucide-react";
+import {
+  CircleDashed,
+  ImageOff,
+  Pencil,
+  Save,
+  Trash,
+  XCircle,
+} from "lucide-react";
 import { trpcReact } from "~/utils/trpc";
 import { toast } from "sonner";
 import { FormInput, FormNumberInput } from "~/components/form";
-import { useFormContext, useFormState } from "react-hook-form";
+import { Controller, useFormContext, useFormState } from "react-hook-form";
 import { Badge } from "~/components/ui/badge";
+import ApiAutocomplete from "~/components/api-autocomplete";
+import Image from "next/image";
 
 type ListItemOutput = inferProcedureOutput<
   AppRouter["listItem"]["get"]
@@ -32,7 +41,7 @@ export const columns: ColumnDef<ListItem>[] = [
       } = cellContext;
 
       return table.options.meta?.getRowEditMode?.(id) ? (
-        <CellTextInput {...cellContext} />
+        <CellGameCombobox />
       ) : (
         cell.getValue()
       );
@@ -67,10 +76,14 @@ export const columns: ColumnDef<ListItem>[] = [
 
       return table.options.meta?.getRowEditMode?.(id) ? (
         <CellTextInput {...cellContext} />
+      ) : cell.getValue() ? (
+        (cell.getValue() as string).split(",").map((tag, i) => (
+          <Badge key={id + i} className="text-md mr-1">
+            {tag}
+          </Badge>
+        ))
       ) : (
-        (cell.getValue() as string)
-          .split(",")
-          .map((tag, i) => <Badge key={id + i} className="mr-1 text-md">{tag}</Badge>)
+        ""
       );
     },
   },
@@ -214,12 +227,52 @@ const CancelEditButton = ({
   );
 };
 
+const CellGameCombobox = () => {
+  return (
+    <Controller<ListItem, "name">
+      name="name"
+      render={({ field: { value, onChange } }) => (
+        <ApiAutocomplete
+          value={value}
+          onChange={onChange}
+          useQuery={trpcReact.game.get.useQuery}
+          getOptionLabel={(option) => option.name}
+          getOptionValue={(option) => option.id.toString()}
+          freeSolo
+          componentProps={{
+            input: {
+              className:
+                "border-none px-4 h-full rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline focus-visible:outline-ring",
+            },
+          }}
+          renderOption={(option, { value, label }) => (
+            <div className="flex items-center">
+              <div className="min-w-6 min-h-6 mr-2">
+                {option.cover?.url ? (
+                  <Image
+                    src={"https:" + option.cover.url}
+                    alt={value}
+                    width={24}
+                    height={24}
+                  />
+                ) : (
+                  <ImageOff fontSize={24} />
+                )}
+              </div>
+              <p>{label}</p>
+            </div>
+          )}
+        />
+      )}
+    />
+  );
+};
+
 const CellTextInput = <TData extends RowData, TValue>(
   cellContext: CellContext<TData, TValue>,
 ) => {
   return (
     <FormInput
-      // className="bor"
       name={cellContext.column.id}
       componentsProps={{
         formItem: { className: "h-full" },

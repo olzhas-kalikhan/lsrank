@@ -52,6 +52,7 @@ export function DataTable<TData extends Record<string, unknown>>({
     getRowId: (originalRow, i) =>
       typeof originalRow?.id === "string" ? originalRow?.id : i.toString(),
     meta: {
+      ...prev.meta,
       editable,
       editModesModel,
       setRowEditMode: (id: string, mode: boolean) => {

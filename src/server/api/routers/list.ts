@@ -13,6 +13,7 @@ export const listRouter = createTRPCRouter({
           .object({
             name: z.string(),
             score: z.number(),
+            tags: z.string().optional().nullable(),
           })
           .array(),
       }),

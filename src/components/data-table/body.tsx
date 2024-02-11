@@ -3,8 +3,9 @@
 import {
   type Table as TableType,
   type Row as RowType,
+  type GetRowPropsFn,
 } from "@tanstack/react-table";
-import { Row, type GetRowPropsFn } from "./row";
+import { Row } from "./row";
 import { TableBody, TableCell, TableRow } from "~/components/ui/table";
 import { Cell } from "./cell";
 
