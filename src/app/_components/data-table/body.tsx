@@ -3,7 +3,7 @@ import { TableBody, TableCell, TableRow } from "~/app/_components/ui/table";
 import { Cell } from "./cell";
 import { useTableContext } from "./table-provider";
 import { useAtomValue } from "jotai";
-import { sortingAtom } from "./atoms-provider";
+import { rowsModeModelAtom, sortingAtom } from "./atoms-provider";
 
 const NoRows = () => (
   <TableRow>
@@ -16,6 +16,7 @@ const Rows = () => {
   const rowModel = getRowModel();
 
   useAtomValue(sortingAtom);
+  useAtomValue(rowsModeModelAtom)
 
   if ((rowModel.rows?.length ?? 0) === 0) return <NoRows />;
   return rowModel.rows.map((row) => (

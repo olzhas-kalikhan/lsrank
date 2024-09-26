@@ -12,14 +12,22 @@ import { type MarkOptional } from "ts-essentials";
 import {
   AtomsProvider,
   type EditMode,
-  rowsEditModeAtom,
+  rowsEditModelAtom,
+  rowsModeModelAtom,
   sortingAtom,
 } from "./atoms-provider";
 
 declare module "@tanstack/table-core" {
+  interface CellContext<TData extends RowData, TValue> {
+    editMode?: EditMode;
+  }
   interface TableMeta<TData extends RowData> {
     getRowEditMode: (rowId: string) => EditMode;
     setRowEditMode: (rowId: string, mode: EditMode) => void;
+    setRowEditValue: (rowId: string, rowValue: Record<string, unknown>) => void;
+    setCellEditValue: (rowId: string, column: string, value: unknown) => void;
+    getRowEditValue: (rowId: string) => Record<string, unknown> | undefined;
+    getCellEditValue: (rowId: string, column: string) => unknown;
   }
 }
 
@@ -44,7 +52,8 @@ export default function TableProvider<TData>({
   children: React.ReactNode;
 }) {
   const [sorting, setSorting] = useAtom(sortingAtom);
-  const [rowsEditMode, setRowsEditMode] = useAtom(rowsEditModeAtom);
+  const [rowsModeModel, setRowsModeModel] = useAtom(rowsModeModelAtom);
+  const [rowsEditModel, setRowsEditModel] = useAtom(rowsEditModelAtom);
 
   const table = useReactTable<TData>({
     getCoreRowModel: getCoreRowModel(),
@@ -53,10 +62,48 @@ export default function TableProvider<TData>({
     onSortingChange: setSorting,
     ...props,
     meta: {
-      getRowEditMode: (rowId) => rowsEditMode?.[rowId] ?? "view",
+      getRowEditMode: (rowId) => rowsModeModel?.[rowId] ?? "view",
       setRowEditMode: (rowId, mode) => {
-        setRowsEditMode({ ...rowsEditMode, [rowId]: mode });
+        if (mode === "edit") {
+          setRowsEditModel((prevModel) => {
+            return {
+              ...prevModel,
+              [rowId]: table.getRow(rowId).original as Record<string, unknown>,
+            };
+          });
+        }
+        if (mode === "view") {
+          setRowsEditModel((prevModel) => {
+            if (!rowsEditModel[rowId]) return prevModel;
+            const newModel = { ...prevModel };
+            delete newModel[rowId];
+            return newModel;
+          });
+        }
+
+        setRowsModeModel({ ...rowsModeModel, [rowId]: mode });
       },
+      setRowEditValue: (rowId, rowValue) => {
+        setRowsEditModel((prevModel) => {
+          return {
+            ...prevModel,
+            [rowId]: rowValue,
+          };
+        });
+      },
+      setCellEditValue: (rowId, column, value) => {
+        setRowsEditModel((prevModel) => {
+          return {
+            ...prevModel,
+            [rowId]: {
+              ...prevModel[rowId],
+              [column]: value,
+            },
+          };
+        });
+      },
+      getRowEditValue: (rowId) => rowsEditModel?.[rowId],
+      getCellEditValue: (rowId, column) => rowsEditModel?.[rowId]?.[column],
     },
   });
 

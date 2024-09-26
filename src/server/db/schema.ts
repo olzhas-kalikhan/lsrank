@@ -4,10 +4,11 @@ import {
   integer,
   pgTableCreator,
   primaryKey,
-  serial,
   text,
   timestamp,
   varchar,
+  doublePrecision,
+  unique,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -107,3 +108,47 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export const lists = createTable(
+  "lists",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    name: varchar("name", { length: 255 }),
+    type: varchar("type", { length: 255 }).$type<"video-game">().notNull(),
+  },
+  (list) => ({
+    userIdIdx: index("list_user_id_idx").on(list.userId),
+    unq: unique().on(list.userId, list.name),
+  }),
+);
+
+export const listItems = createTable(
+  "list_items",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    listId: varchar("list_id", { length: 255 })
+      .notNull()
+      .references(() => lists.id),
+    name: varchar("name", { length: 255 }).unique(),
+    score: doublePrecision("score").notNull(),
+    meta_id: varchar("meta_id", { length: 255 }),
+    meta_pic_url: text("url"),
+  },
+
+  (listItem) => ({
+    userIdIdx: index("list_item_list_id_idx").on(listItem.listId),
+  }),
+);
+
+export const listsRelations = relations(lists, ({ many }) => ({
+  listItems: many(listItems),
+}));

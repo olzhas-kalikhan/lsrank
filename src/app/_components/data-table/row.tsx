@@ -9,6 +9,7 @@ export const Row = <TData,>({
     <TableRow
       key={rowProps.id}
       data-state={rowProps.getIsSelected() && "selected"}
+      data-row-id={rowProps.id}
     >
       {children}
     </TableRow>

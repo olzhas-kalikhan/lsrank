@@ -18,3 +18,7 @@ export function AtomsHydrator({
   useHydrateAtoms(new Map(atomValues));
   return children;
 }
+
+export function isNumber(value: number): value is number {
+  return typeof value === "number" && !isNaN(value);
+}
