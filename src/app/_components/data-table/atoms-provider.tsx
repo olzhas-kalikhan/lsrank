@@ -34,6 +34,7 @@ export function AtomsProvider({ children }: { children: React.ReactNode }) {
       atomValues={[
         [sortingAtom, []],
         [rowsModeModelAtom, {}],
+        [rowsEditModelAtom, {}],
       ]}
     >
       {children}

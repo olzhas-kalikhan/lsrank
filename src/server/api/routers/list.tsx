@@ -43,11 +43,29 @@ export const listRouter = createTRPCRouter({
         }
       });
     }),
-  getLists: protectedProcedure.query(async ({ ctx }) => {
-    const res = await ctx.db.query.lists.findMany({
-      where: (lists, { eq }) => eq(lists.userId, ctx.session.user.id),
-    });
-    
-    return res;
-  }),
+  getListsByUser: protectedProcedure
+    .input(z.object({ userName: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.name, input.userName),
+        with: {
+          lists: true,
+        },
+      });
+      return res;
+    }),
+  getList: protectedProcedure
+    .input(z.object({ userName: z.string(), listName: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const res = await ctx.db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.name, input.userName),
+        with: {
+          lists: {
+            where: (lists, { eq }) => eq(lists.name, input.listName),
+            with: { listItems: true },
+          },
+        },
+      });
+      return res;
+    }),
 });

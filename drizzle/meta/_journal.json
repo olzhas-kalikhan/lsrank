@@ -22,6 +22,13 @@
       "when": 1727201628010,
       "tag": "0002_talented_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1727376359512,
+      "tag": "0003_serious_owl",
+      "breakpoints": true
     }
   ]
 }

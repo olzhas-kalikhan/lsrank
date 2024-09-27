@@ -6,16 +6,13 @@ import { Body } from "./body";
 import { Headers } from "./headers";
 import TableProvider, { type TableProviderProps } from "./table-provider";
 
-export function DataTable<TData extends Record<string, unknown>>({
-  slots,
-  ...props
-}: TableProviderProps<TData> & {
-  slots?: { toolbar?: React.ReactNode };
-}) {
+export function DataTable<TData extends Record<string, unknown>>(
+  props: TableProviderProps<TData>,
+) {
   return (
     <TableProvider {...props}>
       <div className="relative w-full overflow-auto">
-        {slots?.toolbar}
+        {props.slots?.toolbar}
         <Table>
           <Headers />
           <Body />
@@ -24,5 +21,7 @@ export function DataTable<TData extends Record<string, unknown>>({
     </TableProvider>
   );
 }
+export { useEditCellValue } from "./atoms-provider";
+export { useTableContext } from "./table-provider";
 export * from "./utils";
 export { HeaderCell } from "./header-cell";

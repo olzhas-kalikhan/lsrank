@@ -16,6 +16,7 @@ import {
   rowsModeModelAtom,
   sortingAtom,
 } from "./atoms-provider";
+import { type TableRowProps } from "@components/ui/table";
 
 declare module "@tanstack/table-core" {
   interface CellContext<TData extends RowData, TValue> {
@@ -31,13 +32,22 @@ declare module "@tanstack/table-core" {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const TableContext = createContext<Table<any> | null>(null);
+const TableContext = createContext<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ({ table: Table<any> } & ExtraOptions) | null
+>(null);
+
+type ExtraOptions = {
+  slots?: { toolbar?: React.ReactNode };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slotProps?: { row?: TableRowProps };
+};
 
 export type TableProviderProps<TData extends RowData> = MarkOptional<
   TableOptions<TData>,
   "getCoreRowModel"
->;
+> &
+  ExtraOptions;
 
 export function useTableContext() {
   const context = useContext(TableContext);
@@ -47,9 +57,14 @@ export function useTableContext() {
 
 export default function TableProvider<TData>({
   children,
+  slots,
+  slotProps,
   ...props
 }: TableProviderProps<TData> & {
   children: React.ReactNode;
+  slots?: { toolbar?: React.ReactNode };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slotProps?: { row?: any };
 }) {
   const [sorting, setSorting] = useAtom(sortingAtom);
   const [rowsModeModel, setRowsModeModel] = useAtom(rowsModeModelAtom);
@@ -109,7 +124,9 @@ export default function TableProvider<TData>({
 
   return (
     <AtomsProvider>
-      <TableContext.Provider value={table}>{children}</TableContext.Provider>
+      <TableContext.Provider value={{ table, slots, slotProps }}>
+        {children}
+      </TableContext.Provider>
     </AtomsProvider>
   );
 }

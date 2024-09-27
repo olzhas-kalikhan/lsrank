@@ -34,10 +34,6 @@ export const users = createTable("user", {
   image: varchar("image", { length: 255 }),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-}));
-
 export const accounts = createTable(
   "account",
   {
@@ -145,10 +141,20 @@ export const listItems = createTable(
   },
 
   (listItem) => ({
-    userIdIdx: index("list_item_list_id_idx").on(listItem.listId),
+    listIdIdx: index("list_item_list_id_idx").on(listItem.listId),
   }),
 );
 
-export const listsRelations = relations(lists, ({ many }) => ({
+export const listsRelations = relations(lists, ({ many, one }) => ({
   listItems: many(listItems),
+  user: one(users, { fields: [lists.userId], references: [users.id] }),
+}));
+
+export const listItemsRelations = relations(listItems, ({ one }) => ({
+  list: one(lists, { fields: [listItems.listId], references: [lists.id] }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  accounts: many(accounts),
+  lists: many(lists),
 }));

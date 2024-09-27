@@ -5,27 +5,35 @@ import { useTableContext } from "./table-provider";
 import { useAtomValue } from "jotai";
 import { rowsModeModelAtom, sortingAtom } from "./atoms-provider";
 
-const NoRows = () => (
+const NoRows = ({ columnsLength }: { columnsLength: number }) => (
   <TableRow>
-    <TableCell className="h-24 text-center">No results.</TableCell>
+    <TableCell colSpan={columnsLength}>
+      <div className="flex justify-center">No rows</div>
+    </TableCell>
   </TableRow>
 );
 
 const Rows = () => {
-  const { getRowModel, options } = useTableContext();
+  const {
+    table: { getRowModel, options },
+    slotProps,
+  } = useTableContext();
   const rowModel = getRowModel();
 
   useAtomValue(sortingAtom);
-  useAtomValue(rowsModeModelAtom)
+  useAtomValue(rowsModeModelAtom);
 
-  if ((rowModel.rows?.length ?? 0) === 0) return <NoRows />;
+  if ((rowModel.rows?.length ?? 0) === 0)
+    return <NoRows columnsLength={options.columns.length} />;
   return rowModel.rows.map((row) => (
-    <Row key={row.id} {...row}>
+    <Row key={row.id} row={row} {...slotProps?.row}>
       {row.getVisibleCells().map((cell) => (
         <Cell
           key={cell.id}
-          {...cell}
+          cell={cell}
           editMode={options?.meta?.getRowEditMode(row.id)}
+          data-row-id={row.id}
+          data-column={cell.column.columnDef.header ?? ""}
         />
       ))}
     </Row>

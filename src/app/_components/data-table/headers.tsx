@@ -5,7 +5,9 @@ import { useAtomValue } from "jotai";
 import { sortingAtom } from "./atoms-provider";
 
 export const Headers = () => {
-  const { getHeaderGroups } = useTableContext();
+  const {
+    table: { getHeaderGroups },
+  } = useTableContext();
 
   useAtomValue(sortingAtom);
 

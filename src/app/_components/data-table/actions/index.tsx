@@ -11,12 +11,7 @@ export const DeleteListItemButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Button
-      variant="secondary"
-      tabIndex={-1}
-      className="rounded-full px-2"
-      onClick={onClick}
-    >
+    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
       {false ? <CircleDashed className="animate-spin" /> : <Trash />}
     </Button>
   );
@@ -29,12 +24,7 @@ export const EditListItemButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Button
-      variant="secondary"
-      tabIndex={-1}
-      className="rounded-full px-2"
-      onClick={onClick}
-    >
+    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
       {false ? <CircleDashed className="animate-spin" /> : <Pencil />}
     </Button>
   );
@@ -48,12 +38,7 @@ export const CancelListItemButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Button
-      variant="secondary"
-      tabIndex={-1}
-      className="rounded-full px-2"
-      onClick={onClick}
-    >
+    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
       {false ? <CircleDashed className="animate-spin" /> : <X />}
     </Button>
   );
@@ -67,12 +52,7 @@ export const SaveListItemButton = ({
   onClick: () => void;
 }) => {
   return (
-    <Button
-      variant="secondary"
-      tabIndex={-1}
-      className="rounded-full px-2"
-      onClick={onClick}
-    >
+    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
       {false ? <CircleDashed className="animate-spin" /> : <Save />}
     </Button>
   );
