@@ -1,7 +1,5 @@
-import { listRouter } from "~/server/api/routers/list";
-import { createTRPCContext, createTRPCRouter } from "~/server/api/trpc";
-import { listItemRouter } from "./routers/list-item";
-import { gameRouter } from "./routers/game";
+import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { listRouter } from "./routers/list";
 
 /**
  * This is the primary router for your server.
@@ -10,12 +8,16 @@ import { gameRouter } from "./routers/game";
  */
 export const appRouter = createTRPCRouter({
   list: listRouter,
-  listItem: listItemRouter,
-  game: gameRouter,
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
-export const trpcServer = async () => {
-  return appRouter.createCaller(await createTRPCContext());
-};
+
+/**
+ * Create a server-side caller for the tRPC API.
+ * @example
+ * const trpc = createCaller(createContext);
+ * const res = await trpc.post.all();
+ *       ^? Post[]
+ */
+export const createCaller = createCallerFactory(appRouter);
