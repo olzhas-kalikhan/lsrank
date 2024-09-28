@@ -24,7 +24,11 @@ declare module "@tanstack/table-core" {
   }
   interface TableMeta<TData extends RowData> {
     getRowEditMode: (rowId: string) => EditMode;
-    setRowEditMode: (rowId: string, mode: EditMode) => void;
+    setRowEditMode: (
+      rowId: string,
+      mode: EditMode,
+      editValue?: Record<string, unknown>,
+    ) => void;
     setRowEditValue: (rowId: string, rowValue: Record<string, unknown>) => void;
     setCellEditValue: (rowId: string, column: string, value: unknown) => void;
     getRowEditValue: (rowId: string) => Record<string, unknown> | undefined;
@@ -78,12 +82,14 @@ export default function TableProvider<TData>({
     ...props,
     meta: {
       getRowEditMode: (rowId) => rowsModeModel?.[rowId] ?? "view",
-      setRowEditMode: (rowId, mode) => {
+      setRowEditMode: (rowId, mode, editValue) => {
         if (mode === "edit") {
           setRowsEditModel((prevModel) => {
             return {
               ...prevModel,
-              [rowId]: table.getRow(rowId).original as Record<string, unknown>,
+              [rowId]:
+                editValue ??
+                (table.getRow(rowId).original as Record<string, unknown>),
             };
           });
         }

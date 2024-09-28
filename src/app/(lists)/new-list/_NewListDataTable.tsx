@@ -148,9 +148,13 @@ const AddItemButton = ({
     <Button
       variant="secondary"
       onClick={() => {
-        const rowId = crypto.randomUUID();
-        prepend({ _id: rowId, name: "", score: 0 });
-        table.options.meta?.setRowEditMode(rowId, "edit");
+        const newRowValue = { _id: crypto.randomUUID(), name: "", score: 0 };
+        table.options.meta?.setRowEditMode(
+          newRowValue._id,
+          "edit",
+          newRowValue,
+        );
+        prepend(newRowValue);
       }}
     >
       Add Item

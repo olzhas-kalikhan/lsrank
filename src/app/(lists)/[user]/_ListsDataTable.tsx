@@ -1,10 +1,10 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { inferProcedureOutput } from "@trpc/server";
+import { type ColumnDef } from "@tanstack/react-table";
+import { type inferProcedureOutput } from "@trpc/server";
 import { useRouter } from "next/navigation";
 import { DataTable } from "~/app/_components/data-table";
-import { AppRouter } from "~/server/api/root";
+import { type AppRouter } from "~/server/api/root";
 
 type List = NonNullable<
   inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
