@@ -5,6 +5,7 @@ import { type EditMode } from "./atoms-provider";
 export const Cell = <TData, TValue>({
   cell,
   editMode,
+  ...props
 }: {
   cell: CellType<TData, TValue>;
   editMode: EditMode | undefined;
@@ -19,6 +20,7 @@ export const Cell = <TData, TValue>({
       style={{
         width: cell.column.getSize(),
       }}
+      {...props}
     >
       {flexRender(
         cell.column.columnDef.cell,

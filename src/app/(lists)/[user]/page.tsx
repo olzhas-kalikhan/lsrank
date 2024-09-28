@@ -7,6 +7,6 @@ export default async function Page({ params }: { params: { user: string } }) {
 
   void api.list.getListsByUser.prefetch(inputParams);
 
-  if (!data?.lists) return null;
-  return <ListsDataTable data={data.lists} userName={params.user} />;
+  if (!data) return null;
+  return <ListsDataTable userWithList={data} userName={params.user} />;
 }

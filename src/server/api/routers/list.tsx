@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { lists } from "~/server/db/schema";
 import { listItems } from "../../db/schema";
+import { eq } from "drizzle-orm";
 
 export const listRouter = createTRPCRouter({
   createList: protectedProcedure
@@ -65,7 +66,17 @@ export const listRouter = createTRPCRouter({
             with: { listItems: true },
           },
         },
+        columns: {
+          id: true,
+          name: true,
+        },
       });
+      return res;
+    }),
+  deleteList: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db.delete(lists).where(eq(lists.id, input.id));
       return res;
     }),
 });

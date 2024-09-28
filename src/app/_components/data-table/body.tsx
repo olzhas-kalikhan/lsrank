@@ -27,15 +27,21 @@ const Rows = () => {
     return <NoRows columnsLength={options.columns.length} />;
   return rowModel.rows.map((row) => (
     <Row key={row.id} row={row} {...slotProps?.row}>
-      {row.getVisibleCells().map((cell) => (
-        <Cell
-          key={cell.id}
-          cell={cell}
-          editMode={options?.meta?.getRowEditMode(row.id)}
-          data-row-id={row.id}
-          data-column={cell.column.columnDef.header ?? ""}
-        />
-      ))}
+      {row.getVisibleCells().map((cell) => {
+        const column =
+          typeof cell.column.columnDef.header === "string"
+            ? cell.column.columnDef.header
+            : (cell.column.columnDef.id ?? "");
+        return (
+          <Cell
+            key={cell.id}
+            cell={cell}
+            editMode={options?.meta?.getRowEditMode(row.id)}
+            data-row-id={row.id}
+            data-column={column}
+          />
+        );
+      })}
     </Row>
   ));
 };
