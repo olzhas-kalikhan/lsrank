@@ -18,7 +18,7 @@ export const useEditCellValue = (rowId: string, column: string) => {
         (_, set, newValue) => {
           set(rowsEditModelAtom, (prev) => ({
             ...prev,
-            [rowId]: { ...prev[rowId], name: newValue },
+            [rowId]: { ...prev[rowId], [column]: newValue },
           }));
         },
       ),

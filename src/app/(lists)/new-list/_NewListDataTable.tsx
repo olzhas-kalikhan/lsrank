@@ -2,7 +2,13 @@
 
 import { type CellContext, type ColumnDef } from "@tanstack/react-table";
 import React, { useMemo } from "react";
-import { DataTable ,
+import {
+  useFieldArray,
+  type UseFieldArrayReturn,
+  useForm,
+} from "react-hook-form";
+import {
+  DataTable,
   useEditCellValue,
   useTableContext,
 } from "~/app/_components/data-table";
@@ -16,14 +22,7 @@ import NumberInput from "~/app/_components/number-input";
 import { Button } from "~/app/_components/ui/button";
 import { Input } from "~/app/_components/ui/input";
 import { isNumber } from "~/lib/utils";
-import {
-  useFieldArray,
-  type UseFieldArrayReturn,
-  useForm,
-} from "react-hook-form";
 import { api } from "~/trpc/react";
-
-
 
 type ListItem = {
   _id: string;
@@ -43,6 +42,30 @@ const DataTableCellInput = ({ row }: CellContext<ListItem, unknown>) => {
       value={(value as string) ?? ""}
       onChange={(e) => {
         setValue(e.target.value ?? "");
+      }}
+    />
+  );
+};
+
+const DataTableCellNumberInput = (cell: CellContext<ListItem, unknown>) => {
+  const [value, setValue] = useEditCellValue(cell.row.id, "score");
+  return (
+    <NumberInput
+      value={(value as number) ?? null}
+      onValueChange={(values) => {
+        setValue(values.floatValue);
+      }}
+      defaultValue={cell.getValue() as string}
+      isAllowed={(values) => {
+        if (values.value === "") return true;
+        if (
+          values.floatValue === null ||
+          values.floatValue === undefined ||
+          !isNumber(values.floatValue)
+        )
+          return false;
+
+        return values.floatValue >= 0 && values.floatValue <= 10;
       }}
     />
   );
@@ -120,25 +143,10 @@ const getDefaultColumns = (
   {
     header: "Score",
     accessorKey: "score",
-    cell: ({ editMode, cell }) => {
-      if (editMode === "edit")
-        return (
-          <NumberInput
-            defaultValue={cell.getValue() as string}
-            isAllowed={(values) => {
-              if (values.value === "") return true;
-              if (
-                values.floatValue === null ||
-                values.floatValue === undefined ||
-                !isNumber(values.floatValue)
-              )
-                return false;
-
-              return values.floatValue >= 0 && values.floatValue <= 10;
-            }}
-          />
-        );
-      return cell.getValue();
+    cell: (cellContext) => {
+      if (cellContext.editMode === "edit")
+        return <DataTableCellNumberInput {...cellContext} />;
+      return cellContext.cell.getValue();
     },
   },
   {
