@@ -1,5 +1,5 @@
-import { api } from "~/trpc/server";
 import ListsDataTable from "./_ListsDataTable";
+import { api } from "~/trpc/server";
 
 export default async function Page({ params }: { params: { user: string } }) {
   const inputParams = { userName: params.user };

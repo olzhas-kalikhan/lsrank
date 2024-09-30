@@ -1,5 +1,5 @@
-import { api } from "~/trpc/server";
 import ListDataTable from "./_ListDataTable";
+import { api } from "~/trpc/server";
 
 export default async function Page({
   params,

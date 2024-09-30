@@ -1,5 +1,5 @@
-import { Button, type ButtonProps } from "@components/ui/button";
 import { CircleDashed } from "lucide-react";
+import { Button, type ButtonProps } from "@components/ui/button";
 
 export default function IconButton({
   icon,

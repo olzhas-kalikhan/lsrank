@@ -33,9 +33,7 @@ const getDefaultColumns = () //     {
     //   const { editMode, cell } = cellContext;
     //   if (editMode === "edit")
     //     return (
-    //       <Provider>
     //         <DataTableCellInput {...cellContext} />
-    //       </Provider>
     //     );
     //   return cell.getValue();
     // },

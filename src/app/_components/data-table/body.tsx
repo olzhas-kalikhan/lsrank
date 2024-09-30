@@ -1,9 +1,9 @@
+import { useAtomValue } from "jotai";
 import { Row } from "./row";
-import { TableBody, TableCell, TableRow } from "~/app/_components/ui/table";
 import { Cell } from "./cell";
 import { useTableContext } from "./table-provider";
-import { useAtomValue } from "jotai";
 import { rowsModeModelAtom, sortingAtom } from "./atoms-provider";
+import { TableBody, TableCell, TableRow } from "~/app/_components/ui/table";
 
 const NoRows = ({ columnsLength }: { columnsLength: number }) => (
   <TableRow>

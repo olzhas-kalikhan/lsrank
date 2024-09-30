@@ -66,7 +66,7 @@ const defaultColumns: ColumnDef<List>[] = [
       return (
         <div className="flex justify-end gap-x-2">
           <RedirectActionButton row={row} />
-          <DeleteListButton row={row} />;
+          <DeleteListButton row={row} />
         </div>
       );
     },

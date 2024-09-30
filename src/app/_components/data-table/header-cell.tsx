@@ -1,7 +1,7 @@
 import {
   type SortDirection,
-  flexRender,
   type Header,
+  flexRender,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "~/app/_components/ui/button";

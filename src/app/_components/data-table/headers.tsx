@@ -1,8 +1,8 @@
-import { TableHead, TableHeader, TableRow } from "~/app/_components/ui/table";
+import { useAtomValue } from "jotai";
 import { HeaderCell } from "./header-cell";
 import { useTableContext } from "./table-provider";
-import { useAtomValue } from "jotai";
 import { sortingAtom } from "./atoms-provider";
+import { TableHead, TableHeader, TableRow } from "~/app/_components/ui/table";
 
 export const Headers = () => {
   const {

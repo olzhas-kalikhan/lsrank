@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Table } from "~/app/_components/ui/table";
 import { Body } from "./body";
 import { Headers } from "./headers";
 import TableProvider, { type TableProviderProps } from "./table-provider";
+import { Table } from "~/app/_components/ui/table";
 
 export function DataTable<TData extends Record<string, unknown>>(
   props: TableProviderProps<TData>,

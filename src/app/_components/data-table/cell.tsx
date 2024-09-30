@@ -1,6 +1,6 @@
 import { type Cell as CellType, flexRender } from "@tanstack/react-table";
-import { TableCell, type TableCellProps } from "@components/ui/table";
 import { type EditMode } from "./atoms-provider";
+import { TableCell, type TableCellProps } from "@components/ui/table";
 
 export const Cell = <TData, TValue>({
   cell,

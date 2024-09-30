@@ -1,8 +1,11 @@
 "use client";
 
 import { type CellContext, type ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
-import { DataTable } from "~/app/_components/data-table";
+import React, { useMemo } from "react";
+import { DataTable ,
+  useEditCellValue,
+  useTableContext,
+} from "~/app/_components/data-table";
 import {
   CancelListItemButton,
   DeleteListItemButton,
@@ -19,10 +22,8 @@ import {
   useForm,
 } from "react-hook-form";
 import { api } from "~/trpc/react";
-import {
-  useTableContext,
-  useEditCellValue,
-} from "~/app/_components/data-table";
+
+
 
 type ListItem = {
   _id: string;
@@ -47,13 +48,65 @@ const DataTableCellInput = ({ row }: CellContext<ListItem, unknown>) => {
   );
 };
 
-const getDefaultColumns = ({
+const ListItemActions = ({
+  row,
+  editMode,
+  table,
   remove,
   update,
-}: Pick<
-  UseFieldArrayReturn<FormDefaultValues, "listItems">,
-  "remove" | "update"
->): ColumnDef<ListItem>[] => [
+}: CellContext<ListItem, unknown> &
+  Pick<
+    UseFieldArrayReturn<FormDefaultValues, "listItems">,
+    "remove" | "update"
+  >) => {
+  return (
+    <div className="flex justify-end gap-x-2">
+      {editMode === "view" && (
+        <>
+          <EditListItemButton
+            rowId={row.id}
+            onClick={() => {
+              table.options.meta?.setRowEditMode(row.id, "edit");
+            }}
+          />
+          <DeleteListItemButton
+            rowId={row.id}
+            onClick={() => {
+              remove(row.index);
+            }}
+          />
+        </>
+      )}
+      {editMode === "edit" && (
+        <>
+          <SaveListItemButton
+            rowId={row.id}
+            onClick={() => {
+              update(
+                row.index,
+                table.options.meta?.getRowEditValue(row.id) as ListItem,
+              );
+              table.options.meta?.setRowEditMode(row.id, "view");
+            }}
+          />
+          <CancelListItemButton
+            rowId={row.id}
+            onClick={() => {
+              table.options.meta?.setRowEditMode(row.id, "view");
+            }}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+const getDefaultColumns = (
+  arrayMethods: Pick<
+    UseFieldArrayReturn<FormDefaultValues, "listItems">,
+    "remove" | "update"
+  >,
+): ColumnDef<ListItem>[] => [
   { header: "ID", accessorKey: "_id" },
   {
     header: "Name",
@@ -91,46 +144,7 @@ const getDefaultColumns = ({
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row, table, editMode }) => (
-      <div className="flex justify-end gap-x-2">
-        {editMode === "view" && (
-          <>
-            <EditListItemButton
-              rowId={row.id}
-              onClick={() => {
-                table.options.meta?.setRowEditMode(row.id, "edit");
-              }}
-            />
-            <DeleteListItemButton
-              rowId={row.id}
-              onClick={() => {
-                remove(row.index);
-              }}
-            />
-          </>
-        )}
-        {editMode === "edit" && (
-          <>
-            <SaveListItemButton
-              rowId={row.id}
-              onClick={() => {
-                update(
-                  row.index,
-                  table.options.meta?.getRowEditValue(row.id) as ListItem,
-                );
-                table.options.meta?.setRowEditMode(row.id, "view");
-              }}
-            />
-            <CancelListItemButton
-              rowId={row.id}
-              onClick={() => {
-                table.options.meta?.setRowEditMode(row.id, "view");
-              }}
-            />
-          </>
-        )}
-      </div>
-    ),
+    cell: (cell) => <ListItemActions {...cell} {...arrayMethods} />,
 
     size: 20,
     minSize: 20,

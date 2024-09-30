@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { lists } from "~/server/db/schema";
-import { listItems } from "../../db/schema";
 import { eq } from "drizzle-orm";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { lists, listItems } from "~/server/db/schema";
 
 export const listRouter = createTRPCRouter({
   createList: protectedProcedure
