@@ -1,0 +1,2 @@
+ALTER TABLE "lsrank_lists" ADD COLUMN "created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL;--> statement-breakpoint
+ALTER TABLE "lsrank_lists" ADD COLUMN "modified_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL;

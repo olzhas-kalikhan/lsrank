@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { lists, listItems } from "~/server/db/schema";
+import { lists, listItems, users } from "~/server/db/schema";
 
 export const listRouter = createTRPCRouter({
   createList: protectedProcedure
@@ -48,10 +48,25 @@ export const listRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const res = await ctx.db.query.users.findFirst({
         where: (users, { eq }) => eq(users.name, input.userName),
+        columns: {
+          name: true,
+        },
         with: {
-          lists: true,
+          lists: {
+            columns: {
+              id: true,
+              name: true,
+              type: true,
+            },
+            with: {
+              listItems: {
+                columns: { id: true },
+              },
+            },
+          },
         },
       });
+
       return res;
     }),
   getList: protectedProcedure

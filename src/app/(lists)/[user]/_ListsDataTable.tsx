@@ -61,6 +61,10 @@ const defaultColumns: ColumnDef<List>[] = [
     accessorKey: "type",
   },
   {
+    header: "Number of items",
+    accessorFn: ({ listItems }) => listItems.length,
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       return (

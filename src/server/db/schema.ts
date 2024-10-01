@@ -117,6 +117,12 @@ export const lists = createTable(
       .references(() => users.id),
     name: varchar("name", { length: 255 }),
     type: varchar("type", { length: 255 }).$type<"video-game">().notNull(),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
+    modifiedAt: timestamp("modified_at", { mode: "date", withTimezone: true })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`),
   },
   (list) => ({
     userIdIdx: index("list_user_id_idx").on(list.userId),

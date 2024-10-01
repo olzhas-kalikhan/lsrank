@@ -24,4 +24,5 @@ export function DataTable<TData extends Record<string, unknown>>(
 export { useEditCellValue } from "./atoms-provider";
 export { useTableContext } from "./table-provider";
 export * from "./utils";
+export * from "./actions";
 export { HeaderCell } from "./header-cell";

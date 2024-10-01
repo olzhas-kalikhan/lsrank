@@ -12,12 +12,7 @@ import {
   useEditCellValue,
   useTableContext,
 } from "~/app/_components/data-table";
-import {
-  CancelListItemButton,
-  DeleteListItemButton,
-  EditListItemButton,
-  SaveListItemButton,
-} from "~/app/_components/data-table/actions";
+import { DataTableActions } from "~/app/_components/data-table/actions";
 import NumberInput from "~/app/_components/number-input";
 import { Button } from "~/app/_components/ui/button";
 import { Input } from "~/app/_components/ui/input";
@@ -83,44 +78,25 @@ const ListItemActions = ({
     "remove" | "update"
   >) => {
   return (
-    <div className="flex justify-end gap-x-2">
-      {editMode === "view" && (
-        <>
-          <EditListItemButton
-            rowId={row.id}
-            onClick={() => {
-              table.options.meta?.setRowEditMode(row.id, "edit");
-            }}
-          />
-          <DeleteListItemButton
-            rowId={row.id}
-            onClick={() => {
-              remove(row.index);
-            }}
-          />
-        </>
-      )}
-      {editMode === "edit" && (
-        <>
-          <SaveListItemButton
-            rowId={row.id}
-            onClick={() => {
-              update(
-                row.index,
-                table.options.meta?.getRowEditValue(row.id) as ListItem,
-              );
-              table.options.meta?.setRowEditMode(row.id, "view");
-            }}
-          />
-          <CancelListItemButton
-            rowId={row.id}
-            onClick={() => {
-              table.options.meta?.setRowEditMode(row.id, "view");
-            }}
-          />
-        </>
-      )}
-    </div>
+    <DataTableActions
+      editMode={editMode}
+      onEdit={() => {
+        table.options.meta?.setRowEditMode(row.id, "edit");
+      }}
+      onDelete={() => {
+        remove(row.index);
+      }}
+      onSave={() => {
+        update(
+          row.index,
+          table.options.meta?.getRowEditValue(row.id) as ListItem,
+        );
+        table.options.meta?.setRowEditMode(row.id, "view");
+      }}
+      onCancel={() => {
+        table.options.meta?.setRowEditMode(row.id, "view");
+      }}
+    />
   );
 };
 
