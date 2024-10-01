@@ -1,4 +1,4 @@
-import ListDataTable from "./_ListDataTable";
+import ListDataTable from "./_list-data-table";
 import { api } from "~/trpc/server";
 
 export default async function Page({
