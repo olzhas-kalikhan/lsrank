@@ -22,3 +22,21 @@ export function AtomsHydrator({
 export function isNumber(value: number): value is number {
   return typeof value === "number" && !isNaN(value);
 }
+
+type RemoveUndefined<Type> = {
+  [Property in keyof Type as Type[Property] extends undefined
+    ? never
+    : Property]: Type[Property];
+};
+
+export function getDefinedPropsObj<T extends Record<string, unknown>>(
+  obj: T,
+): RemoveUndefined<T> {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach((key) => {
+    if (obj[key] === undefined) {
+      delete obj[key];
+    }
+  });
+  return newObj as RemoveUndefined<T>;
+}

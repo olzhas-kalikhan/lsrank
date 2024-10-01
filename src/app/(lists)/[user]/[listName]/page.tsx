@@ -1,4 +1,4 @@
-import ListDataTable from "./_list-data-table";
+import ListItemsDataTable from "./_list-items-data-table";
 import { api } from "~/trpc/server";
 
 export default async function Page({
@@ -11,11 +11,5 @@ export default async function Page({
     listName: params.listName,
   });
 
-  const listItems = list?.lists[0]?.listItems ?? [];
-
-  return (
-    <div>
-      <ListDataTable data={listItems ?? []} />
-    </div>
-  );
+  return <ListItemsDataTable list={list} />;
 }

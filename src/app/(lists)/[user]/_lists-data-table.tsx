@@ -10,10 +10,6 @@ import IconButton from "~/app/_components/icon-button";
 import { type AppRouter } from "~/server/api/root";
 import { api } from "~/trpc/react";
 
-type UserWithList = NonNullable<
-  inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
->;
-
 type List = NonNullable<
   inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
 >["lists"][number];
@@ -81,7 +77,9 @@ export default function ListsDataTable({
   userWithList,
   userName,
 }: {
-  userWithList: UserWithList;
+  userWithList: NonNullable<
+    inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
+  >;
   userName: string;
 }) {
   const { data } = api.list.getListsByUser.useQuery(
