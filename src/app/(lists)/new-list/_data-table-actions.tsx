@@ -1,8 +1,7 @@
 import React from "react";
-import { CellContext } from "@tanstack/react-table";
-import { ListItem } from "./_types";
-import { UseFieldArrayReturn } from "react-hook-form";
-import { FormDefaultValues } from "./_types";
+import { type CellContext } from "@tanstack/react-table";
+import { type UseFieldArrayReturn } from "react-hook-form";
+import { type ListItem, type FormDefaultValues } from "./_types";
 import { ACTION_ICONS, ActionsWrapper } from "~/app/_components/data-table";
 import IconButton from "~/app/_components/icon-button";
 

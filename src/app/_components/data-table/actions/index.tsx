@@ -10,7 +10,7 @@ export const ACTION_ICONS = {
   Delete: Trash,
   Save: Save,
   Cancel: X,
-};
+} as const;
 
 export const ActionsWrapper = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex justify-end gap-x-2">{children}</div>;

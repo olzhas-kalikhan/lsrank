@@ -1,24 +1,11 @@
 "use client";
 
-import { type CellContext, type ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import { type UseFieldArrayReturn } from "react-hook-form";
-import {
-  CellNumberInput,
-  CellTextInput,
-  useEditCellValue,
-} from "~/app/_components/data-table";
-import {
-  ACTION_ICONS,
-  ActionsWrapper,
-  DataTableActions,
-} from "~/app/_components/data-table/actions";
-import IconButton from "~/app/_components/icon-button";
-import NumberInput from "~/app/_components/number-input";
-import { Input } from "~/app/_components/ui/input";
-import { isNumber } from "~/lib/utils";
-import { FormDefaultValues, ListItem } from "./_types";
 import ListItemActions from "./_data-table-actions";
+import { type FormDefaultValues, type ListItem } from "./_types";
+import { CellNumberInput, CellTextInput } from "~/app/_components/data-table";
 
 export const getDefaultColumns = (
   arrayMethods: Pick<
@@ -26,7 +13,6 @@ export const getDefaultColumns = (
     "remove" | "update"
   >,
 ): ColumnDef<ListItem>[] => [
-  { header: "ID", accessorKey: "_id" },
   {
     header: "Name",
     accessorKey: "name",
@@ -49,7 +35,6 @@ export const getDefaultColumns = (
     id: "actions",
     enableHiding: false,
     cell: (cell) => <ListItemActions {...cell} {...arrayMethods} />,
-
     size: 20,
     minSize: 20,
   },

@@ -1,6 +1,13 @@
+import React from "react";
 import { type ColumnDef, type CellContext } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
-import { DataTableActions } from "~/app/_components/data-table";
+import {
+  ACTION_ICONS,
+  ActionsWrapper,
+  CellNumberInput,
+  CellTextInput,
+} from "~/app/_components/data-table";
+import IconButton from "~/app/_components/icon-button";
 import { api } from "~/trpc/react";
 
 type ListItem = {
@@ -9,58 +16,28 @@ type ListItem = {
   score: number;
 };
 
-export const getDefaultColumns = () //     {
-//   remove,
-//   update,
-// }: Pick<
-//   UseFieldArrayReturn<FormDefaultValues>,
-//   "remove" | "update"
-// >
-: ColumnDef<ListItem>[] => [
-  {
-    header: "ID",
-    accessorKey: "id",
-  },
+export const getDefaultColumns = (): ColumnDef<ListItem>[] => [
   {
     header: "Name",
     accessorKey: "name",
-    // cell: (cellContext) => {
-    //   const { editMode, cell } = cellContext;
-    //   if (editMode === "edit")
-    //     return (
-    //         <DataTableCellInput {...cellContext} />
-    //     );
-    //   return cell.getValue();
-    // },
+    cell: (cellContext) => {
+      if (cellContext.editMode === "edit")
+        return <CellTextInput {...cellContext} />;
+      return cellContext.cell.getValue();
+    },
   },
   {
     header: "Score",
     accessorKey: "score",
-    // cell: ({ editMode, cell }) => {
-    //   if (editMode === "edit")
-    //     return (
-    //       <NumberInput
-    //         defaultValue={cell.getValue() as string}
-    //         isAllowed={(values) => {
-    //           if (values.value === "") return true;
-    //           if (
-    //             values.floatValue === null ||
-    //             values.floatValue === undefined ||
-    //             !isNumber(values.floatValue)
-    //           )
-    //             return false;
-
-    //           return values.floatValue >= 0 && values.floatValue <= 10;
-    //         }}
-    //       />
-    //     );
-    //   return cell.getValue();
-    // },
+    cell: (cellContext) => {
+      if (cellContext.editMode === "edit")
+        return <CellNumberInput {...cellContext} />;
+      return cellContext.cell.getValue();
+    },
   },
   {
     id: "actions",
     cell: (cell) => <ListItemsActions {...cell} />,
-
     size: 20,
     minSize: 20,
   },
@@ -74,35 +51,65 @@ export function ListItemsActions({
   const utils = api.useUtils();
   const params = useParams<{ listName: string; user: string }>();
 
-  const { mutate: deleteListItem } = api.listItem.deleteListItem.useMutation({
-    onSuccess: () => {
-      void utils.list.getList.invalidate({
-        listName: params.listName,
-        userName: params.user,
-      });
-    },
-  });
-  const { mutate: updateListItem } = api.listItem.updateListItem.useMutation();
+  const { mutateAsync: deleteListItem, isPending: isDeletePending } =
+    api.listItem.deleteListItem.useMutation({
+      onSuccess: () => {
+        void utils.list.getList.invalidate({
+          listName: params.listName,
+          userName: params.user,
+        });
+      },
+    });
+  const { mutateAsync: updateListItem, isPending: isUpdatePending } =
+    api.listItem.updateListItem.useMutation({
+      onSuccess: () => {
+        void utils.list.getList.invalidate({
+          listName: params.listName,
+          userName: params.user,
+        });
+      },
+    });
 
   return (
-    <DataTableActions
-      editMode={editMode}
-      onEdit={() => {
-        table.options.meta?.setRowEditMode(row.id, "edit");
-      }}
-      onDelete={() => {
-        deleteListItem({ id: row.id });
-      }}
-      onSave={() => {
-        const newValues = table.options.meta?.getRowEditValue(
-          row.id,
-        ) as ListItem;
-        updateListItem(newValues);
-        table.options.meta?.setRowEditMode(row.id, "view");
-      }}
-      onCancel={() => {
-        table.options.meta?.setRowEditMode(row.id, "view");
-      }}
-    />
+    <ActionsWrapper>
+      {editMode === "view" && (
+        <>
+          <IconButton
+            icon={<ACTION_ICONS.Edit />}
+            onClick={() => {
+              table.options.meta?.setRowEditMode(row.id, "edit");
+            }}
+          />
+          <IconButton
+            icon={<ACTION_ICONS.Delete />}
+            isLoading={isDeletePending}
+            onClick={() => {
+              void deleteListItem({ id: row.id });
+            }}
+          />
+        </>
+      )}
+      {editMode === "edit" && (
+        <>
+          <IconButton
+            icon={<ACTION_ICONS.Save />}
+            isLoading={isUpdatePending}
+            onClick={async () => {
+              const newValues = table.options.meta?.getRowEditValue(
+                row.id,
+              ) as ListItem;
+              await updateListItem(newValues);
+              table.options.meta?.setRowEditMode(row.id, "view");
+            }}
+          />
+          <IconButton
+            icon={<ACTION_ICONS.Cancel />}
+            onClick={() => {
+              table.options.meta?.setRowEditMode(row.id, "view");
+            }}
+          />
+        </>
+      )}
+    </ActionsWrapper>
   );
 }

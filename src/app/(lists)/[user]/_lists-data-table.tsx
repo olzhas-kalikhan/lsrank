@@ -40,17 +40,13 @@ const DeleteListButton = ({ row }: { row: Row<List> }) => {
       icon={<Trash />}
       isLoading={isPending}
       onClick={() => {
-        deleteList({ id: row.id });
+        void deleteList({ id: row.id });
       }}
     />
   );
 };
 
 const defaultColumns: ColumnDef<List>[] = [
-  {
-    header: "ID",
-    accessorKey: "id",
-  },
   {
     header: "Name",
     accessorKey: "name",
