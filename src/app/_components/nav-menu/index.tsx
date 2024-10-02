@@ -46,7 +46,7 @@ export default async function NavMenu({ className }: { className?: string }) {
           />
         </li>
         <li className="pb-4">
-          <NavLink href="/new-list" label="Create List" Icon={ClipboardPlus} />
+          <NavLink href="/new-list" label="New List" Icon={ClipboardPlus} />
         </li>
       </ul>
     </nav>

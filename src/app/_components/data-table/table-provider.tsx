@@ -42,7 +42,7 @@ const TableContext = createContext<
 >(null);
 
 type ExtraOptions = {
-  slots?: { toolbar?: React.ReactNode };
+  slots?: { toolbar?: React.ReactNode; footer?: React.ReactNode };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   slotProps?: { row?: TableRowProps };
 };

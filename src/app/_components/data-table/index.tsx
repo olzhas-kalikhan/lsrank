@@ -17,6 +17,7 @@ export function DataTable<TData extends Record<string, unknown>>(
           <Headers />
           <Body />
         </Table>
+        {props.slots?.footer}
       </div>
     </TableProvider>
   );

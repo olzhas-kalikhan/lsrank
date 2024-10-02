@@ -28,15 +28,17 @@ const RedirectActionButton = ({ row }: { row: Row<List> }) => {
 const DeleteListButton = ({ row }: { row: Row<List> }) => {
   const utils = api.useUtils();
   const { user } = useParams<{ user: string }>();
-  const { mutate: deleteList } = api.list.deleteList.useMutation({
-    onSuccess: async () => {
-      await utils.list.getListsByUser.invalidate({ userName: user });
-    },
-  });
+  const { mutateAsync: deleteList, isPending } =
+    api.list.deleteList.useMutation({
+      onSuccess: async () => {
+        await utils.list.getListsByUser.invalidate({ userName: user });
+      },
+    });
 
   return (
     <IconButton
       icon={<Trash />}
+      isLoading={isPending}
       onClick={() => {
         deleteList({ id: row.id });
       }}
@@ -98,8 +100,8 @@ export default function ListsDataTable({
           <div className="mb-2 flex justify-between p-1">
             <div></div>
             <div className="flex gap-2">
-              <Button asChild>
-                <Link href="/new-list">Create List</Link>
+              <Button asChild variant="secondary">
+                <Link href="/new-list">Add List</Link>
               </Button>
             </div>
           </div>
