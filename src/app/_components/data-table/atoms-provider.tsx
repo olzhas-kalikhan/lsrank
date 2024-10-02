@@ -10,11 +10,11 @@ export const rowsModeModelAtom = atom<RowsModeModel>({});
 export type RowsEditModel = Record<string, Record<string, unknown>>;
 export const rowsEditModelAtom = atom<RowsEditModel>({});
 
-export const useEditCellValue = (rowId: string, column: string) => {
+export const useEditCellValue = <TValue,>(rowId: string, column: string) => {
   const cellEditAtom = useMemo(
     () =>
       atom(
-        (get) => get(rowsEditModelAtom)[rowId]?.[column],
+        (get) => get(rowsEditModelAtom)[rowId]?.[column] as TValue,
         (_, set, newValue) => {
           set(rowsEditModelAtom, (prev) => ({
             ...prev,

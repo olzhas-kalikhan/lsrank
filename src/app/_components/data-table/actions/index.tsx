@@ -1,42 +1,20 @@
 "use client";
 
-import { CircleDashed, Pencil, Save, Trash, X } from "lucide-react";
-import { type CellContext } from "@tanstack/react-table";
+import { Pencil, Save, Trash, X } from "lucide-react";
 import React from "react";
 import { type EditMode } from "../atoms-provider";
-import { Button } from "@components/ui/button";
+import IconButton from "../../icon-button";
 
-export const DeleteListItemButton = ({ onClick }: { onClick: () => void }) => {
-  return (
-    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
-      {false ? <CircleDashed className="animate-spin" /> : <Trash />}
-    </Button>
-  );
-};
-export const EditListItemButton = ({ onClick }: { onClick: () => void }) => {
-  return (
-    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
-      {false ? <CircleDashed className="animate-spin" /> : <Pencil />}
-    </Button>
-  );
+export const ACTION_ICONS = {
+  Edit: Pencil,
+  Delete: Trash,
+  Save: Save,
+  Cancel: X,
 };
 
-export const CancelListItemButton = ({ onClick }: { onClick: () => void }) => {
-  return (
-    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
-      {false ? <CircleDashed className="animate-spin" /> : <X />}
-    </Button>
-  );
+export const ActionsWrapper = ({ children }: { children: React.ReactNode }) => {
+  return <div className="flex justify-end gap-x-2">{children}</div>;
 };
-
-export const SaveListItemButton = ({ onClick }: { onClick: () => void }) => {
-  return (
-    <Button size="icon" variant="secondary" tabIndex={-1} onClick={onClick}>
-      {false ? <CircleDashed className="animate-spin" /> : <Save />}
-    </Button>
-  );
-};
-
 export const DataTableActions = ({
   editMode,
   onEdit,
@@ -51,19 +29,19 @@ export const DataTableActions = ({
   onCancel: () => void;
 }) => {
   return (
-    <div className="flex justify-end gap-x-2">
+    <ActionsWrapper>
       {editMode === "view" && (
         <>
-          <EditListItemButton onClick={onEdit} />
-          <DeleteListItemButton onClick={onDelete} />
+          <IconButton icon={<ACTION_ICONS.Edit />} onClick={onEdit} />
+          <IconButton icon={<ACTION_ICONS.Delete />} onClick={onDelete} />
         </>
       )}
       {editMode === "edit" && (
         <>
-          <SaveListItemButton onClick={onCancel} />
-          <CancelListItemButton onClick={onSave} />
+          <IconButton icon={<ACTION_ICONS.Save />} onClick={onSave} />
+          <IconButton icon={<ACTION_ICONS.Cancel />} onClick={onCancel} />
         </>
       )}
-    </div>
+    </ActionsWrapper>
   );
 };

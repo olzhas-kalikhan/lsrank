@@ -2,12 +2,10 @@
 
 import React, { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import {
-  type FormDefaultValues,
-  getDefaultColumns,
-} from "./_data-table-columns";
+import { getDefaultColumns } from "./_data-table-columns";
 import DataTableToolbar from "./_data-table-toolbar";
 import { DataTable } from "~/app/_components/data-table";
+import { FormDefaultValues } from "./_types";
 
 const defaultListItems = [
   {

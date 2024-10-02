@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { DataTable } from "~/app/_components/data-table";
 import IconButton from "~/app/_components/icon-button";
+import { Button } from "~/app/_components/ui/button";
 import { type AppRouter } from "~/server/api/root";
 import { api } from "~/trpc/react";
 
@@ -92,6 +93,18 @@ export default function ListsDataTable({
       data={data?.lists ?? []}
       columns={defaultColumns}
       getRowId={(row) => row.id}
+      slots={{
+        toolbar: (
+          <div className="mb-2 flex justify-between p-1">
+            <div></div>
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link href="/new-list">Create List</Link>
+              </Button>
+            </div>
+          </div>
+        ),
+      }}
     />
   );
 }

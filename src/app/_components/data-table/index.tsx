@@ -26,3 +26,4 @@ export { useTableContext } from "./table-provider";
 export * from "./utils";
 export * from "./actions";
 export { HeaderCell } from "./header-cell";
+export * from "./cells";

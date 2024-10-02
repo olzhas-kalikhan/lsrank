@@ -17,7 +17,7 @@ export const listRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.transaction(async (tx) => {
+      return await ctx.db.transaction(async (tx) => {
         try {
           const createdLists = await tx
             .insert(lists)
@@ -26,8 +26,8 @@ export const listRouter = createTRPCRouter({
               type: "video-game",
               userId: ctx.session.user.id,
             })
-            .returning({ listId: lists.id });
-          const listId = createdLists[0]?.listId;
+            .returning({ id: lists.id, name: lists.name });
+          const listId = createdLists[0]?.id;
           if (!listId) {
             throw new Error("No List ID");
           }
@@ -37,6 +37,7 @@ export const listRouter = createTRPCRouter({
             listId,
           }));
           await tx.insert(listItems).values(mappedListItems);
+          return createdLists;
         } catch (err) {
           console.log(err);
           tx.rollback();

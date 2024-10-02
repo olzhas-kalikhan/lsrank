@@ -1,9 +1,12 @@
 import { type UseFormReturn, type UseFieldArrayReturn } from "react-hook-form";
-import { type FormDefaultValues } from "./_data-table-columns";
 import { useTableContext } from "~/app/_components/data-table";
 import { Button } from "~/app/_components/ui/button";
 import { Input } from "~/app/_components/ui/input";
 import { api } from "~/trpc/react";
+import { FormDefaultValues } from "./_types";
+import { useToast } from "~/app/_hooks/use-toast";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const AddItemButton = ({
   prepend,
@@ -37,7 +40,19 @@ export default function DataTableToolbar({
   formMethods: UseFormReturn<FormDefaultValues>;
   prepend: UseFieldArrayReturn<FormDefaultValues, "listItems">["prepend"];
 }) {
-  const { mutate: createListReq } = api.list.createList.useMutation();
+  const session = useSession();
+  const { toast } = useToast();
+  const utils = api.useUtils();
+  const router = useRouter();
+
+  const { mutate: createListReq } = api.list.createList.useMutation({
+    onSuccess: (res) => {
+      toast({ description: "List Was Created" });
+      void utils.list.getListsByUser.invalidate();
+      console.log(session.data?.user.name, res?.[0]?.name);
+      router.push(`/${session.data?.user.name}/${res?.[0]?.name}`);
+    },
+  });
 
   return (
     <div className="mb-2 flex justify-between p-1">
