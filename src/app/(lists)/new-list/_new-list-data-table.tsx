@@ -51,7 +51,7 @@ export default function NewListDataTable() {
   const { mutateAsync: createListReq } = api.list.createList.useMutation({
     onSuccess: (res) => {
       toast({ description: "List Was Created" });
-      void utils.list.getListsByUser.invalidate();
+      void utils.list.getLists.invalidate();
       router.push(`/${session.data?.user.name}/${res?.[0]?.name}`);
     },
   });

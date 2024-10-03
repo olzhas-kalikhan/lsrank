@@ -12,7 +12,7 @@ import { type AppRouter } from "~/server/api/root";
 import { api } from "~/trpc/react";
 
 type List = NonNullable<
-  inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
+  inferProcedureOutput<AppRouter["list"]["getLists"]>
 >["lists"][number];
 
 const RedirectActionButton = ({ row }: { row: Row<List> }) => {
@@ -31,7 +31,7 @@ const DeleteListButton = ({ row }: { row: Row<List> }) => {
   const { mutateAsync: deleteList, isPending } =
     api.list.deleteList.useMutation({
       onSuccess: async () => {
-        await utils.list.getListsByUser.invalidate({ userName: user });
+        await utils.list.getLists.invalidate({ userName: user });
       },
     });
 
@@ -77,11 +77,11 @@ export default function ListsDataTable({
   userName,
 }: {
   userWithList: NonNullable<
-    inferProcedureOutput<AppRouter["list"]["getListsByUser"]>
+    inferProcedureOutput<AppRouter["list"]["getLists"]>
   >;
   userName: string;
 }) {
-  const { data } = api.list.getListsByUser.useQuery(
+  const { data } = api.list.getLists.useQuery(
     { userName: userName },
     { initialData: userWithList },
   );
