@@ -22,7 +22,7 @@ type AutocompleteOption = {
   label: string;
 };
 
-export default function AutocompleteInput<TOption extends AutocompleteOption>({
+export default function Combobox<TOption extends AutocompleteOption>({
   options,
 }: {
   options: TOption[];
