@@ -1,4 +1,4 @@
-import { CellContext, RowData } from "@tanstack/react-table";
+import { type CellContext, type RowData } from "@tanstack/react-table";
 import { useEditCellValue } from "../atoms-provider";
 import NumberInput from "@components/number-input";
 import { isNumber } from "~/lib/utils";

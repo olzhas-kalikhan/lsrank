@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { type CellContext } from "@tanstack/react-table";
 import { type UseFieldArrayReturn } from "react-hook-form";

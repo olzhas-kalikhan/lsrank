@@ -1,3 +1,5 @@
+"use client"
+
 import { type Row as RowType } from "@tanstack/react-table";
 import { TableRow, type TableRowProps } from "~/app/_components/ui/table";
 

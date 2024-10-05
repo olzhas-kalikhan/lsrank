@@ -1,3 +1,5 @@
+"use client"
+
 import { type SortingState } from "@tanstack/react-table";
 import { atom, useAtom } from "jotai";
 import { useMemo } from "react";

@@ -1,11 +1,8 @@
-import { useToast } from "~/app/_hooks/use-toast";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { api } from "~/trpc/react";
-import { Button } from "~/app/_components/ui/button";
-import { UseFormReturn, useFormState } from "react-hook-form";
-import { FormDefaultValues } from "./_types";
+"use client";
+
+import { useFormState } from "react-hook-form";
 import { CircleDashed } from "lucide-react";
+import { Button } from "~/app/_components/ui/button";
 
 export default function DataTableFooter() {
   const { isSubmitting } = useFormState();

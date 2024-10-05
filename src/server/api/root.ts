@@ -1,5 +1,6 @@
 import { listRouter } from "./routers/list";
 import { listItemRouter } from "./routers/list-item";
+import { videoGameRouter } from "./routers/video-game";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -10,6 +11,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
   list: listRouter,
   listItem: listItemRouter,
+  videoGame: videoGameRouter,
 });
 
 // export type definition of API

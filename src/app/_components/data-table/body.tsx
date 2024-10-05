@@ -1,3 +1,5 @@
+"use client";
+
 import { useAtomValue } from "jotai";
 import { Row } from "./row";
 import { Cell } from "./cell";

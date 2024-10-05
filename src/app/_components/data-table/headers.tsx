@@ -1,3 +1,5 @@
+"use client";
+
 import { useAtomValue } from "jotai";
 import { HeaderCell } from "./header-cell";
 import { useTableContext } from "./table-provider";

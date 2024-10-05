@@ -1,11 +1,12 @@
-import { type UseFormReturn, type UseFieldArrayReturn } from "react-hook-form";
+"use client"
+
+import { type UseFieldArrayReturn } from "react-hook-form";
+import { type FormDefaultValues } from "./_types";
 import { useTableContext } from "~/app/_components/data-table";
 import { Button } from "~/app/_components/ui/button";
 import { Input } from "~/app/_components/ui/input";
-import { FormDefaultValues } from "./_types";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
