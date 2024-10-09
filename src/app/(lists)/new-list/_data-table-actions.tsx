@@ -3,7 +3,7 @@
 import React from "react";
 import { type CellContext } from "@tanstack/react-table";
 import { type UseFieldArrayReturn } from "react-hook-form";
-import { type ListItem, type FormDefaultValues } from "./_types";
+import { type ListItemRowModel, type FormDefaultValues } from "./_types";
 import { ACTION_ICONS, ActionsWrapper } from "~/app/_components/data-table";
 import IconButton from "~/app/_components/icon-button";
 
@@ -13,7 +13,7 @@ export default function ListItemActions({
   table,
   remove,
   update,
-}: CellContext<ListItem, unknown> &
+}: CellContext<ListItemRowModel, unknown> &
   Pick<
     UseFieldArrayReturn<FormDefaultValues, "listItems">,
     "remove" | "update"
@@ -43,7 +43,7 @@ export default function ListItemActions({
             onClick={() => {
               update(
                 row.index,
-                table.options.meta?.getRowEditValue(row.id) as ListItem,
+                table.options.meta?.getRowEditValue(row.id) as ListItemRowModel,
               );
               table.options.meta?.setRowEditMode(row.id, "view");
             }}

@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { type inferProcedureOutput } from "@trpc/server";
-import { getDefaultColumns } from "./_data-table-columns";
+import { defaultColumns, type ListItemRowModel } from "./_data-table-columns";
 import { DataTable } from "@components/data-table";
 import { api } from "~/trpc/react";
 import { type AppRouter } from "~/server/api/root";
@@ -24,8 +24,29 @@ export default function ListItemsDataTable({
 
   return (
     <DataTable
-      columns={getDefaultColumns()}
-      data={listItems}
+      columns={defaultColumns}
+      data={listItems.reduce(
+        (output, { name, meta_id, meta_pic_url, ...rest }) => {
+          if (name && meta_id) {
+            output.push({
+              item: Object.assign(
+                {
+                  label: name,
+                  value: meta_id,
+                },
+                meta_pic_url && {
+                  cover: {
+                    url: meta_pic_url,
+                  },
+                },
+              ),
+              ...rest,
+            });
+          }
+          return output;
+        },
+        [] as ListItemRowModel[],
+      )}
       getRowId={(row) => row.id}
     />
   );

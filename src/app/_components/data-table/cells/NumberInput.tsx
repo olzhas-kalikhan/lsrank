@@ -6,7 +6,10 @@ import { isNumber } from "~/lib/utils";
 export default function DataTableCellNumberInput<T extends RowData, TValue>(
   cell: CellContext<T, TValue>,
 ) {
-  const [value, setValue] = useEditCellValue<TValue>(cell.row.id, "score");
+  const [value, setValue] = useEditCellValue<TValue>(
+    cell.row.id,
+    cell.column.id,
+  );
 
   return (
     <NumberInput

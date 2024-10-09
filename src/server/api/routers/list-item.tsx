@@ -11,6 +11,8 @@ export const listItemRouter = createTRPCRouter({
         id: z.string(),
         name: z.string().optional().nullable(),
         score: z.number().optional(),
+        meta_id: z.string().nullable(),
+        meta_pic_url: z.string().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

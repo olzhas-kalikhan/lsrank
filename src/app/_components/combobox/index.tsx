@@ -61,11 +61,21 @@ export default function Combobox<TOption extends ComboboxOption>({
 
   return (
     <Command shouldFilter={false}>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover
+        open={open}
+        onOpenChange={(open) => {
+          if (open && selectedOption) {
+            setInputValue(selectedOption.label);
+            onInputValueChange?.(selectedOption.label);
+          }
+
+          setOpen(open);
+        }}
+      >
         <PopoverTrigger asChild>
           <Button
             asChild
-            className="w-[300px] justify-between"
+            className="w-full justify-between"
             variant="outline"
             role="combobox"
             aria-expanded={open}

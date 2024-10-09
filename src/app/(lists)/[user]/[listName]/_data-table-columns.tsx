@@ -1,29 +1,49 @@
 import React from "react";
 import { type ColumnDef, type CellContext } from "@tanstack/react-table";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import {
   ACTION_ICONS,
   ActionsWrapper,
   CellNumberInput,
-  CellTextInput,
+  CellGamesCombobox,
 } from "~/app/_components/data-table";
 import IconButton from "~/app/_components/icon-button";
 import { api } from "~/trpc/react";
+import { type GameData } from "~/app/_components/games-combobox";
 
-type ListItem = {
+export type ListItemRowModel = {
   id: string;
-  name: string | null;
+  item: GameData | null;
   score: number;
 };
 
-export const getDefaultColumns = (): ColumnDef<ListItem>[] => [
+export const defaultColumns: ColumnDef<ListItemRowModel>[] = [
   {
     header: "Name",
-    accessorKey: "name",
+    accessorKey: "item",
     cell: (cellContext) => {
       if (cellContext.editMode === "edit")
-        return <CellTextInput {...cellContext} />;
-      return cellContext.cell.getValue();
+        return <CellGamesCombobox {...cellContext} />;
+
+      const gameData = cellContext.cell.getValue() as GameData;
+
+      return (
+        <div className="flex items-center">
+          <Image
+            className="mr-2 rounded-md"
+            src={
+              gameData?.cover?.url
+                ? `https:${gameData?.cover?.url}`
+                : "https://imageplaceholder.net/128x128/eeeeee/131313?text=N/A"
+            }
+            width={28}
+            height={28}
+            alt={gameData.label}
+          />
+          <span> {gameData?.label}</span>
+        </div>
+      );
     },
   },
   {
@@ -47,7 +67,7 @@ export function ListItemsActions({
   editMode,
   row,
   table,
-}: CellContext<ListItem, unknown>) {
+}: CellContext<ListItemRowModel, unknown>) {
   const utils = api.useUtils();
   const params = useParams<{ listName: string; user: string }>();
 
@@ -95,10 +115,16 @@ export function ListItemsActions({
             icon={<ACTION_ICONS.Save />}
             isLoading={isUpdatePending}
             onClick={async () => {
-              const newValues = table.options.meta?.getRowEditValue(
+              const { item, ...rest } = table.options.meta?.getRowEditValue(
                 row.id,
-              ) as ListItem;
-              await updateListItem(newValues);
+              ) as ListItemRowModel;
+              if (!item) return;
+              await updateListItem({
+                name: item.label,
+                meta_id: item.value,
+                meta_pic_url: item?.cover?.url ?? null,
+                ...rest,
+              });
               table.options.meta?.setRowEditMode(row.id, "view");
             }}
           />

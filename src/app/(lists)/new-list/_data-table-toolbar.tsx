@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { type UseFieldArrayReturn } from "react-hook-form";
 import { type FormDefaultValues } from "./_types";
@@ -23,8 +23,9 @@ const AddItemButton = ({
   return (
     <Button
       variant="secondary"
+      type="button"
       onClick={() => {
-        const newRowValue = { _id: crypto.randomUUID(), name: "", score: 0 };
+        const newRowValue = { _id: crypto.randomUUID(), item: null, score: 0 };
         table.options.meta?.setRowEditMode(
           newRowValue._id,
           "edit",

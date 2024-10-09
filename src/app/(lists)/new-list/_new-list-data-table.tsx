@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getDefaultColumns } from "./_data-table-columns";
 import DataTableToolbar from "./_data-table-toolbar";
-import { type FormDefaultValues } from "./_types";
+import { type NewListReqBody, type FormDefaultValues } from "./_types";
 import DataTableFooter from "./_data-table-footer";
 import { DataTable } from "~/app/_components/data-table";
 import { Form } from "~/app/_components/ui/form";
@@ -56,11 +56,28 @@ export default function NewListDataTable() {
     },
   });
 
-  const onSubmit = (values: FormDefaultValues) =>
-    createListReq({
+  const onSubmit = async (values: FormDefaultValues) => {
+    const mappedListItems = values.listItems.reduce(
+      (output, { item, ...rest }) => {
+        console.log(item);
+        if (item)
+          output.push({
+            ...rest,
+            name: item.label,
+            meta_id: item.value,
+            meta_pic_url: item.cover?.url ?? null,
+          });
+
+        return output;
+      },
+      [] as NewListReqBody["listItems"],
+    );
+
+    return createListReq({
       name: values.listName,
-      listItems: values.listItems,
+      listItems: mappedListItems,
     });
+  };
 
   return (
     <Form {...formMethods}>

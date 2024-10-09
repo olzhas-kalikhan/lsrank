@@ -12,6 +12,8 @@ export const listRouter = createTRPCRouter({
           z.object({
             name: z.string(),
             score: z.number(),
+            meta_id: z.string().nullable(),
+            meta_pic_url: z.string().nullable(),
           }),
         ),
       }),
@@ -34,6 +36,8 @@ export const listRouter = createTRPCRouter({
           const mappedListItems = input.listItems.map((listItem) => ({
             name: listItem.name,
             score: listItem.score,
+            meta_pic_url: listItem.meta_pic_url,
+            meta_id: listItem.meta_id,
             listId,
           }));
           await tx.insert(listItems).values(mappedListItems);

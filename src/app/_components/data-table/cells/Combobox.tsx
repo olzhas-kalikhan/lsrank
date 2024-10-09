@@ -8,7 +8,10 @@ export default function CellCombobox<T extends RowData, TValue>({
 }: CellContext<T, TValue> & {
   options: ComboboxOption[];
 }) {
-  const [value, setValue] = useEditCellValue<TValue>(cell.row.id, "score");
+  const [value, setValue] = useEditCellValue<TValue>(
+    cell.row.id,
+    cell.column.id,
+  );
 
   return (
     <Combobox

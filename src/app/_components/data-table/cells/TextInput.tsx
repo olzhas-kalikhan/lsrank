@@ -4,8 +4,9 @@ import { Input } from "@components/ui/input";
 
 export default function CellTextInput<T extends RowData, TValue>({
   row,
+  column,
 }: CellContext<T, TValue>) {
-  const [value, setValue] = useEditCellValue<TValue>(row.id, "name");
+  const [value, setValue] = useEditCellValue<TValue>(row.id, column.id);
 
   return (
     <Input

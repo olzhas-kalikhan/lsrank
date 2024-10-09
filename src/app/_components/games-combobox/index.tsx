@@ -2,18 +2,35 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { type inferProcedureOutput } from "@trpc/server";
 import Combobox from "../combobox";
 import { api } from "~/trpc/react";
 import { useDebounce } from "~/app/_hooks/use-debounce";
+import { type AppRouter } from "~/server/api/root";
 
-export default function ApiCombobox() {
+export type GameData = inferProcedureOutput<
+  AppRouter["videoGame"]["getGames"]
+>[number];
+
+export default function GamesCombobox({
+  value,
+  onValueChange,
+}: {
+  value?: GameData | null;
+  onValueChange?: (value: GameData | null) => void;
+}) {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data } = api.videoGame.getGames.useQuery({ search: debouncedSearch });
+  const { data } = api.videoGame.getGames.useQuery(
+    { search: debouncedSearch },
+    { enabled: !!search },
+  );
 
   return (
     <Combobox
+      value={value}
+      onValueChange={onValueChange}
       options={data ?? []}
       inputValue={search}
       onInputValueChange={setSearch}

@@ -7,9 +7,9 @@ const GAME_FIELDS = ["name", "cover.url", "slug", "url"] as const;
 
 type GameData = {
   name: string;
-  cover: { url: string };
   slug: string;
-  url: string;
+  cover?: { url?: string };
+  url?: string;
 };
 
 export const videoGameRouter = createTRPCRouter({

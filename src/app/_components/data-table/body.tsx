@@ -28,7 +28,14 @@ const Rows = () => {
   if ((rowModel.rows?.length ?? 0) === 0)
     return <NoRows columnsLength={options.columns.length} />;
   return rowModel.rows.map((row) => (
-    <Row key={row.id} row={row} {...slotProps?.row}>
+    <Row
+      key={row.id}
+      row={row}
+      onDoubleClick={() => {
+        options.meta?.setRowEditMode(row.id, "edit");
+      }}
+      {...slotProps?.row}
+    >
       {row.getVisibleCells().map((cell) => {
         const column =
           typeof cell.column.columnDef.header === "string"
