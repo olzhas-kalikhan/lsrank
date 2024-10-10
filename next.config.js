@@ -7,7 +7,10 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["images.igdb.com", "imageplaceholder.net"],
+    remotePatterns: [
+      { hostname: "images.igdb.com" },
+      { hostname: "imageplaceholder.net" },
+    ],
   },
 };
 
