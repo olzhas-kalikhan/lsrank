@@ -117,16 +117,10 @@ export const lists = createTable(
       .references(() => users.id),
     name: varchar("name", { length: 255 }),
     type: varchar("type", { length: 255 }).$type<"video-game">().notNull(),
-    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
-    modifiedAt: timestamp("modified_at", { mode: "date", withTimezone: true })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP`),
   },
   (list) => ({
     userIdIdx: index("list_user_id_idx").on(list.userId),
-    unq: unique().on(list.userId, list.name),
+    unqList: unique("list_name_user_id").on(list.userId, list.name),
   }),
 );
 
@@ -140,7 +134,7 @@ export const listItems = createTable(
     listId: varchar("list_id", { length: 255 })
       .notNull()
       .references(() => lists.id, { onDelete: "cascade" }),
-    name: varchar("name", { length: 255 }).unique(),
+    name: varchar("name", { length: 255 }),
     score: doublePrecision("score").notNull(),
     meta_id: varchar("meta_id", { length: 255 }),
     meta_pic_url: text("url"),
@@ -148,6 +142,10 @@ export const listItems = createTable(
 
   (listItem) => ({
     listIdIdx: index("list_item_list_id_idx").on(listItem.listId),
+    unqListItem: unique("list_item_name_list_id").on(
+      listItem.name,
+      listItem.listId,
+    ),
   }),
 );
 

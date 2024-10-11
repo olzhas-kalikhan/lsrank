@@ -13,12 +13,22 @@ CREATE TABLE IF NOT EXISTS "lsrank_account" (
 	CONSTRAINT "lsrank_account_provider_provider_account_id_pk" PRIMARY KEY("provider","provider_account_id")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "lsrank_post" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(256),
-	"created_by" varchar(255) NOT NULL,
-	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp with time zone
+CREATE TABLE IF NOT EXISTS "lsrank_list_items" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"list_id" varchar(255) NOT NULL,
+	"name" varchar(255),
+	"score" double precision NOT NULL,
+	"meta_id" varchar(255),
+	"url" text,
+	CONSTRAINT "lsrank_list_items_name_list_id_unique" UNIQUE("name","list_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "lsrank_lists" (
+	"id" varchar(255) PRIMARY KEY NOT NULL,
+	"user_id" varchar(255) NOT NULL,
+	"name" varchar(255),
+	"type" varchar(255) NOT NULL,
+	CONSTRAINT "lsrank_lists_user_id_name_unique" UNIQUE("user_id","name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "lsrank_session" (
@@ -49,7 +59,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "lsrank_post" ADD CONSTRAINT "lsrank_post_created_by_lsrank_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."lsrank_user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "lsrank_list_items" ADD CONSTRAINT "lsrank_list_items_list_id_lsrank_lists_id_fk" FOREIGN KEY ("list_id") REFERENCES "public"."lsrank_lists"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "lsrank_lists" ADD CONSTRAINT "lsrank_lists_user_id_lsrank_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."lsrank_user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -61,6 +77,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "account_user_id_idx" ON "lsrank_account" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "created_by_idx" ON "lsrank_post" USING btree ("created_by");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "name_idx" ON "lsrank_post" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "list_item_list_id_idx" ON "lsrank_list_items" USING btree ("list_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "list_user_id_idx" ON "lsrank_lists" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "session_user_id_idx" ON "lsrank_session" USING btree ("user_id");

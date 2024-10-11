@@ -23,31 +23,34 @@ export default function ListItemsDataTable({
   const listItems = data?.lists[0]?.listItems ?? [];
 
   return (
-    <DataTable
-      columns={defaultColumns}
-      data={listItems.reduce(
-        (output, { name, meta_id, meta_pic_url, ...rest }) => {
-          if (name && meta_id) {
-            output.push({
-              item: Object.assign(
-                {
-                  label: name,
-                  value: meta_id,
-                },
-                meta_pic_url && {
-                  cover: {
-                    url: meta_pic_url,
+    <div>
+      <h1 className="text-lg">{data?.lists[0]?.name}</h1>
+      <DataTable
+        columns={defaultColumns}
+        data={listItems.reduce(
+          (output, { name, meta_id, meta_pic_url, ...rest }) => {
+            if (name && meta_id) {
+              output.push({
+                item: Object.assign(
+                  {
+                    label: name,
+                    value: meta_id,
                   },
-                },
-              ),
-              ...rest,
-            });
-          }
-          return output;
-        },
-        [] as ListItemRowModel[],
-      )}
-      getRowId={(row) => row.id}
-    />
+                  meta_pic_url && {
+                    cover: {
+                      url: meta_pic_url,
+                    },
+                  },
+                ),
+                ...rest,
+              });
+            }
+            return output;
+          },
+          [] as ListItemRowModel[],
+        )}
+        getRowId={(row) => row.id}
+      />
+    </div>
   );
 }

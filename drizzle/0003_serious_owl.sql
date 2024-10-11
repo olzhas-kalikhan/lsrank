@@ -1,1 +1,0 @@
-ALTER TABLE "lsrank_list_items" ALTER COLUMN "score" SET NOT NULL;

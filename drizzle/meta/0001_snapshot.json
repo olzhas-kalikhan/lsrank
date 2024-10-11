@@ -1,6 +1,6 @@
 {
-  "id": "69d361de-3032-47e8-9fd9-b5d2b7a96b2c",
-  "prevId": "f04c52a7-1013-4337-9391-52773c5bea97",
+  "id": "a800e263-b3f3-4c04-93e8-92a61e8ee838",
+  "prevId": "bbed36e4-8794-437a-84dd-b5033a9114e9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -117,6 +117,164 @@
         }
       },
       "uniqueConstraints": {}
+    },
+    "public.lsrank_list_items": {
+      "name": "lsrank_list_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "list_id": {
+          "name": "list_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "score": {
+          "name": "score",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta_id": {
+          "name": "meta_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "list_item_list_id_idx": {
+          "name": "list_item_list_id_idx",
+          "columns": [
+            {
+              "expression": "list_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "lsrank_list_items_list_id_lsrank_lists_id_fk": {
+          "name": "lsrank_list_items_list_id_lsrank_lists_id_fk",
+          "tableFrom": "lsrank_list_items",
+          "tableTo": "lsrank_lists",
+          "columnsFrom": [
+            "list_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "list_item_name_list_id": {
+          "name": "list_item_name_list_id",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name",
+            "list_id"
+          ]
+        }
+      }
+    },
+    "public.lsrank_lists": {
+      "name": "lsrank_lists",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "list_user_id_idx": {
+          "name": "list_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "lsrank_lists_user_id_lsrank_user_id_fk": {
+          "name": "lsrank_lists_user_id_lsrank_user_id_fk",
+          "tableFrom": "lsrank_lists",
+          "tableTo": "lsrank_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "list_name_user_id": {
+          "name": "list_name_user_id",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "name"
+          ]
+        }
+      }
     },
     "public.lsrank_session": {
       "name": "lsrank_session",

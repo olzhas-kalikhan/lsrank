@@ -1,1 +1,0 @@
-DROP TABLE "lsrank_post";

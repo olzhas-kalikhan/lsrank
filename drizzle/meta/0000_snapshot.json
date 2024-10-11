@@ -1,5 +1,5 @@
 {
-  "id": "f04c52a7-1013-4337-9391-52773c5bea97",
+  "id": "bbed36e4-8794-437a-84dd-b5033a9114e9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -118,63 +118,53 @@
       },
       "uniqueConstraints": {}
     },
-    "public.lsrank_post": {
-      "name": "lsrank_post",
+    "public.lsrank_list_items": {
+      "name": "lsrank_list_items",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "varchar(255)",
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_by": {
-          "name": "created_by",
+        "list_id": {
+          "name": "list_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": false
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
+        "score": {
+          "name": "score",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meta_id": {
+          "name": "meta_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {
-        "created_by_idx": {
-          "name": "created_by_idx",
+        "list_item_list_id_idx": {
+          "name": "list_item_list_id_idx",
           "columns": [
             {
-              "expression": "created_by",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "name_idx": {
-          "name": "name_idx",
-          "columns": [
-            {
-              "expression": "name",
+              "expression": "list_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -187,12 +177,85 @@
         }
       },
       "foreignKeys": {
-        "lsrank_post_created_by_lsrank_user_id_fk": {
-          "name": "lsrank_post_created_by_lsrank_user_id_fk",
-          "tableFrom": "lsrank_post",
+        "lsrank_list_items_list_id_lsrank_lists_id_fk": {
+          "name": "lsrank_list_items_list_id_lsrank_lists_id_fk",
+          "tableFrom": "lsrank_list_items",
+          "tableTo": "lsrank_lists",
+          "columnsFrom": [
+            "list_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "lsrank_list_items_name_list_id_unique": {
+          "name": "lsrank_list_items_name_list_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name",
+            "list_id"
+          ]
+        }
+      }
+    },
+    "public.lsrank_lists": {
+      "name": "lsrank_lists",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "list_user_id_idx": {
+          "name": "list_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "lsrank_lists_user_id_lsrank_user_id_fk": {
+          "name": "lsrank_lists_user_id_lsrank_user_id_fk",
+          "tableFrom": "lsrank_lists",
           "tableTo": "lsrank_user",
           "columnsFrom": [
-            "created_by"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -202,7 +265,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "lsrank_lists_user_id_name_unique": {
+          "name": "lsrank_lists_user_id_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "name"
+          ]
+        }
+      }
     },
     "public.lsrank_session": {
       "name": "lsrank_session",
