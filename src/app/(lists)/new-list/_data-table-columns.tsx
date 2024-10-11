@@ -6,11 +6,9 @@ import { type UseFieldArrayReturn } from "react-hook-form";
 import Image from "next/image";
 import ListItemActions from "./_data-table-actions";
 import { type FormDefaultValues, type ListItemRowModel } from "./_types";
-import {
-  CellNumberInput,
-  CellGamesCombobox,
-} from "~/app/_components/data-table";
+import { CellGamesCombobox } from "~/app/_components/data-table";
 import { type GameData } from "~/app/_components/games-combobox";
+import CellScoreSelect from "~/app/_components/data-table/cells/score-select";
 
 export const getDefaultColumns = (
   arrayMethods: Pick<
@@ -49,7 +47,7 @@ export const getDefaultColumns = (
     accessorKey: "score",
     cell: (cellContext) => {
       if (cellContext.editMode === "edit")
-        return <CellNumberInput {...cellContext} />;
+        return <CellScoreSelect {...cellContext} />;
       return cellContext.cell.getValue();
     },
   },

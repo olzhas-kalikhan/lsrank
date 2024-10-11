@@ -32,7 +32,8 @@ const Rows = () => {
       key={row.id}
       row={row}
       onDoubleClick={() => {
-        options.meta?.setRowEditMode(row.id, "edit");
+        if (options.meta?.getRowEditMode(row.id) === "view")
+          options.meta?.setRowEditMode(row.id, "edit");
       }}
       {...slotProps?.row}
     >

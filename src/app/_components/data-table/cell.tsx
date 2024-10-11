@@ -15,7 +15,7 @@ export const Cell = <TData, TValue>({
       className={
         editMode === "edit" || cell.column.columnDef.id === "actions"
           ? "py-2"
-          : undefined
+          : "py-1"
       }
       style={{
         width: cell.column.getSize(),

@@ -73,5 +73,8 @@ export default function useControlled<T>({
     }
   }, []);
 
-  return [value, setValueIfUncontrolled] as const;
+  return [value, setValueIfUncontrolled] as [
+    T,
+    (newValue: T | ((prevValue: T) => T)) => void,
+  ];
 }

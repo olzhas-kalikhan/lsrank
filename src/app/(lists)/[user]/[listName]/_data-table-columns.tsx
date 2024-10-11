@@ -5,12 +5,12 @@ import Image from "next/image";
 import {
   ACTION_ICONS,
   ActionsWrapper,
-  CellNumberInput,
   CellGamesCombobox,
 } from "~/app/_components/data-table";
 import IconButton from "~/app/_components/icon-button";
 import { api } from "~/trpc/react";
 import { type GameData } from "~/app/_components/games-combobox";
+import CellScoreSelect from "~/app/_components/data-table/cells/score-select";
 
 export type ListItemRowModel = {
   id: string;
@@ -51,7 +51,7 @@ export const defaultColumns: ColumnDef<ListItemRowModel>[] = [
     accessorKey: "score",
     cell: (cellContext) => {
       if (cellContext.editMode === "edit")
-        return <CellNumberInput {...cellContext} />;
+        return <CellScoreSelect {...cellContext} />;
       return cellContext.cell.getValue();
     },
   },
