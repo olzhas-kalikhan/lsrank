@@ -10,6 +10,7 @@ const config = {
     remotePatterns: [
       { hostname: "images.igdb.com" },
       { hostname: "imageplaceholder.net" },
+      { hostname: "cdn.discordapp.com" },
     ],
   },
 };

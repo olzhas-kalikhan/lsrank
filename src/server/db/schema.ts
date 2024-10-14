@@ -120,7 +120,7 @@ export const lists = createTable(
   },
   (list) => ({
     userIdIdx: index("list_user_id_idx").on(list.userId),
-    unqList: unique("list_name_user_id").on(list.userId, list.name),
+    unqListNameUserId: unique("list_name_user_id").on(list.userId, list.name),
   }),
 );
 
@@ -138,11 +138,15 @@ export const listItems = createTable(
     score: doublePrecision("score").notNull(),
     meta_id: varchar("meta_id", { length: 255 }),
     meta_pic_url: text("url"),
+    genre_ids: text("genre_ids")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
   },
 
   (listItem) => ({
     listIdIdx: index("list_item_list_id_idx").on(listItem.listId),
-    unqListItem: unique("list_item_name_list_id").on(
+    unqListItemNameListId: unique("list_item_name_list_id").on(
       listItem.name,
       listItem.listId,
     ),

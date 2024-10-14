@@ -6,10 +6,13 @@ export default async function Page({
 }: {
   params: { user: string; listName: string };
 }) {
-  const list = await api.list.getList({
+  const inputParams = {
     userName: params.user,
     listName: params.listName,
-  });
+  };
+  const list = await api.list.getList(inputParams);
+
+  void api.list.getList.prefetch(inputParams);
 
   return <ListItemsDataTable list={list} />;
 }

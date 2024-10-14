@@ -14,6 +14,7 @@ export const listRouter = createTRPCRouter({
             score: z.number(),
             meta_id: z.string().nullable(),
             meta_pic_url: z.string().nullable(),
+            genre_ids: z.array(z.string()).default([]),
           }),
         ),
       }),
@@ -38,6 +39,7 @@ export const listRouter = createTRPCRouter({
             score: listItem.score,
             meta_pic_url: listItem.meta_pic_url,
             meta_id: listItem.meta_id,
+            genre_ids: listItem.genre_ids,
             listId,
           }));
           await tx.insert(listItems).values(mappedListItems);
@@ -55,6 +57,7 @@ export const listRouter = createTRPCRouter({
         where: (users, { eq }) => eq(users.name, input.userName),
         columns: {
           name: true,
+          image: true,
         },
         with: {
           lists: {
@@ -96,6 +99,15 @@ export const listRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const res = await ctx.db.delete(lists).where(eq(lists.id, input.id));
+      return res;
+    }),
+  updateList: protectedProcedure
+    .input(z.object({ id: z.string(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db
+        .update(lists)
+        .set({ name: input.name })
+        .where(eq(lists.id, input.id));
       return res;
     }),
 });

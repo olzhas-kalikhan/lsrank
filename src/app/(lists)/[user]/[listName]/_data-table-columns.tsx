@@ -73,8 +73,8 @@ export function ListItemsActions({
 
   const { mutateAsync: deleteListItem, isPending: isDeletePending } =
     api.listItem.deleteListItem.useMutation({
-      onSuccess: () => {
-        void utils.list.getList.invalidate({
+      onSuccess: async () => {
+        await utils.list.getList.invalidate({
           listName: params.listName,
           userName: params.user,
         });
@@ -82,8 +82,8 @@ export function ListItemsActions({
     });
   const { mutateAsync: updateListItem, isPending: isUpdatePending } =
     api.listItem.updateListItem.useMutation({
-      onSuccess: () => {
-        void utils.list.getList.invalidate({
+      onSuccess: async () => {
+        await utils.list.getList.invalidate({
           listName: params.listName,
           userName: params.user,
         });

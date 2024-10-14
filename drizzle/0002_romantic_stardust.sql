@@ -1,0 +1,1 @@
+ALTER TABLE "lsrank_list_items" ADD COLUMN "genre_ids" text[] DEFAULT '{}'::text[] NOT NULL;

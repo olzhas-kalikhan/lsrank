@@ -3,6 +3,7 @@
 import { type Row, type ColumnDef } from "@tanstack/react-table";
 import { type inferProcedureOutput } from "@trpc/server";
 import { ArrowUpRight, Trash } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { DataTable } from "~/app/_components/data-table";
@@ -87,22 +88,37 @@ export default function ListsDataTable({
   );
 
   return (
-    <DataTable
-      data={data?.lists ?? []}
-      columns={defaultColumns}
-      getRowId={(row) => row.id}
-      slots={{
-        toolbar: (
-          <div className="mb-2 flex justify-between p-1">
-            <div></div>
-            <div className="flex gap-2">
-              <Button asChild variant="secondary">
-                <Link href="/new-list">Add List</Link>
-              </Button>
+    <div>
+      <div className="flex items-center gap-4">
+        <Image
+          className="rounded-full"
+          src={
+            data?.image ??
+            "https://imageplaceholder.net/128x128/eeeeee/131313?text=N/A"
+          }
+          width={60}
+          height={60}
+          alt={`image for ${data?.name}`}
+        />
+        <h1 className="text-2xl">{userName}</h1>
+      </div>
+      <DataTable
+        data={data?.lists ?? []}
+        columns={defaultColumns}
+        getRowId={(row) => row.id}
+        slots={{
+          toolbar: (
+            <div className="mb-2 flex justify-between p-1">
+              <div></div>
+              <div className="flex gap-2">
+                <Button asChild variant="secondary">
+                  <Link href="/new-list">Add List</Link>
+                </Button>
+              </div>
             </div>
-          </div>
-        ),
-      }}
-    />
+          ),
+        }}
+      />
+    </div>
   );
 }

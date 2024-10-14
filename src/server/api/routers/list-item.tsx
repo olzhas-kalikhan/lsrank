@@ -13,6 +13,7 @@ export const listItemRouter = createTRPCRouter({
         score: z.number().optional(),
         meta_id: z.string().nullable(),
         meta_pic_url: z.string().nullable(),
+        genre_ids: z.array(z.string()).default([]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
